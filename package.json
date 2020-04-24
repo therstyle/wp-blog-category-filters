@@ -1,0 +1,34 @@
+{
+  "name": "eight29-filters-vue",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "browserslist": "^4.12.0",
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-clean-dist": "0.0.6",
+    "vue": "^2.6.11",
+    "vue-hot-reload-api": "^2.3.4"
+  },
+  "alias": {
+    "vue": "./node_modules/vue/dist/vue.common.js"
+  },
+  "browserslist": [
+    "last 2 Chrome versions"
+  ],
+  "devDependencies": {
+    "@vue/component-compiler-utils": "^3.1.2",
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-runtime": "^6.26.0",
+    "sass": "^1.26.5",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "scripts": {
+    "start": "parcel watch src/main.js src/assets/css/style.scss",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
