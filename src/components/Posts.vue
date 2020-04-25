@@ -2,7 +2,7 @@
   <section class="eight29-posts">
     <template v-if="posts && posts.length > 0">
       <article v-for="post in posts" :key="post.id">
-        <h4 v-html="post.title.rendered"></h4>
+        <h4><a :href="post.link" v-html="post.title.rendered"></a></h4>
         <div class="excerpt" v-html="post.excerpt.rendered"></div>
       </article>
 
@@ -19,7 +19,7 @@
         <li class="page-next">
           <button 
             v-on:click="pageNext"
-            :disabled="currentPage + 1 >= maxPages"
+            :disabled="currentPage >= maxPages"
           >Next</button>
         </li>
       </ul>
@@ -46,9 +46,11 @@ export default {
       this.$emit('reset');
     },
     pagePrev() {
+      console.log('pagePrev');
       this.$emit('pagePrev');
     },
     pageNext() {
+      console.log('pageNext');
       this.$emit('pageNext');
     }
   }

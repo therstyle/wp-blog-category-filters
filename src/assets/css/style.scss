@@ -1,6 +1,4 @@
 .eight29-app {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
   max-width: 100% !important;
 
   button[disabled="disabled"],
@@ -85,5 +83,12 @@
         text-align: center;
       }
     }
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .eight29-app {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
   }
 }

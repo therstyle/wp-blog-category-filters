@@ -99,7 +99,7 @@ export default {
       }
     },
     pageNext() {
-      if (!this.currentPage + 1 >= maxPages){
+      if (!(this.currentPage >= this.maxPages)){
         this.currentPage++;
         this.loadPosts();
       }
