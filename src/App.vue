@@ -11,6 +11,7 @@
 
     <posts
       :posts="posts"
+      v-on:reset="resetSelected"
     ></posts>
   </div>
 </template>
@@ -41,16 +42,16 @@ export default {
     loadCats: async function() {
       const response = await fetch(`${wp.home_url}/wp-json/eight29/v1/categories`);
       const data = await response.json();
-      //console.log(data);
       this.categories = data;
     },
-    loadPosts: async function(id) {
-      console.log(id);
-
-      const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?categories=${id}&page=${this.currentPage}`);
+    loadPosts: async function() {
+      const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?categories=${this.currentCategoryIds}&page=${this.currentPage}`);
       const data = await response.json();
-      //console.log(data);
       this.posts = data;
+    },
+    resetSelected() {
+      this.currentCategoryIds = [1];
+      this.loadPosts();
     },
     addToSelected(id) {
       console.log('addToSelected');
@@ -60,16 +61,16 @@ export default {
       }
   
       console.log(this.currentCategoryIds);
-      this.loadPosts(this.currentCategoryIds);
+      this.loadPosts();
     },
     removeFromSelected(id) {
       console.log('removeFromSelected');
       let selectedCategories = [...this.currentCategoryIds];
       selectedCategories = selectedCategories.filter(categoryId => !id);
 
-      this.currentCategoryIds = selectedCategories.length === 0? this.currentCategoryIds = [0] : selectedCategories; 
+      this.currentCategoryIds = selectedCategories.length === 0 ? this.currentCategoryIds = [0] : selectedCategories;
 
-      this.loadPosts(this.currentCategoryIds);
+      this.loadPosts();
     },
     updateCurrent(object) {
       this.currentCategory = object.category;
@@ -81,7 +82,7 @@ export default {
   },
   mounted() {
     this.loadCats();
-    this.loadPosts(this.currentCategoryIds);
+    this.loadPosts();
   }
 }
 </script>

@@ -10,7 +10,7 @@
     </template>
 
     <div v-else>
-      Sorry, no results.
+      Sorry, no results. <button v-on:click="resetSelected">Clear Filters</button>
     </div>
   </section>
 </template>
@@ -20,6 +20,12 @@ export default {
   name: 'Posts',
   props: {
     posts: Array
+  },
+  methods: {
+    resetSelected() {
+      console.log('reset');
+      this.$emit('reset');
+    }
   }
 }
 </script>

@@ -8,7 +8,7 @@
               :value="category.slug" 
               :id="category.slug" 
               :checked="currentCategoryIds.includes(category.id)"
-              v-on:change="updateCurrent({category: category.slug, id: category.id, selected: currentCategoryIds.includes(category.id)})"
+              v-on:change="updateCurrent({category: category.slug, id: category.id, children: category.children, selected: currentCategoryIds.includes(category.id)})"
             >
             <label :for="category.slug">{{ category.name }}</label>
           </div>
@@ -47,10 +47,22 @@ export default {
       if(object.selected) {
         console.log('remove from array');
         this.$emit('remove', object.id);
+
+        if(object.children) {
+          object.children.forEach(child => {
+            this.$emit('remove', child.id);
+          })
+        }
       }
       else {
         console.log('add to array');
         this.$emit('add', object.id);
+
+        if(object.children) {
+          object.children.forEach(child => {
+            this.$emit('add', child.id);
+          })
+        }
       }
     }
   }
