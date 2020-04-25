@@ -4,6 +4,7 @@
       :categories="categories"
       :currentCategory="currentCategory"
       :currentCategoryIds="currentCategoryIds"
+      :results="results"
       v-on:updateCurrent="updateCurrent"
       v-on:remove="removeFromSelected"
       v-on:add="addToSelected"
@@ -11,7 +12,12 @@
 
     <posts
       :posts="posts"
+      :currentPage="currentPage"
+      :maxPages="maxPages"
+      :results="results"
       v-on:reset="resetSelected"
+      v-on:pagePrev="pagePrev"
+      v-on:pageNext="pageNext"
     ></posts>
   </div>
 </template>
@@ -29,7 +35,10 @@ export default {
       currentCategory: 'uncategorized',
       currentId: 1,
       currentPage: 1,
+      postsPerPage: 10,
+      maxPages: 1,
       currentCategoryIds: [1],
+      results: 0,
       loading: false
     }
   },
@@ -45,9 +54,13 @@ export default {
       this.categories = data;
     },
     loadPosts: async function() {
+      this.loading = true;
       const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?categories=${this.currentCategoryIds}&page=${this.currentPage}`);
       const data = await response.json();
       this.posts = data;
+      this.maxPages = parseInt(response.headers.get('X-WP-TotalPages'));
+      this.results = parseInt(response.headers.get('X-WP-Total'));
+      this.loading = false;
     },
     resetSelected() {
       this.currentCategoryIds = [1];
@@ -78,6 +91,18 @@ export default {
 
       console.log('current IDs')
       console.log(this.currentCategoryIds);
+    },
+    pagePrev() {
+      if (!this.currentPage <= 1) {
+        this.currentPage--;
+        this.loadPosts();
+      }
+    },
+    pageNext() {
+      if (!this.currentPage + 1 >= maxPages){
+        this.currentPage++;
+        this.loadPosts();
+      }
     }
   },
   mounted() {

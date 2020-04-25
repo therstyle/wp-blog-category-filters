@@ -6,7 +6,23 @@
         <div class="excerpt" v-html="post.excerpt.rendered"></div>
       </article>
 
-      <ul class="pagination"></ul>
+      <ul class="pagination">
+        <li class="page-prev">
+          <button 
+            v-on:click="pagePrev"
+            :disabled="currentPage <= 1"
+          >Previous</button>
+        </li>
+
+        <li class="page-current">{{ currentPage }}</li>
+
+        <li class="page-next">
+          <button 
+            v-on:click="pageNext"
+            :disabled="currentPage + 1 >= maxPages"
+          >Next</button>
+        </li>
+      </ul>
     </template>
 
     <div v-else>
@@ -19,12 +35,21 @@
 export default {
   name: 'Posts',
   props: {
-    posts: Array
+    posts: Array,
+    currentPage: Number,
+    maxPages: Number,
+    results: Number
   },
   methods: {
     resetSelected() {
       console.log('reset');
       this.$emit('reset');
+    },
+    pagePrev() {
+      this.$emit('pagePrev');
+    },
+    pageNext() {
+      this.$emit('pageNext');
     }
   }
 }

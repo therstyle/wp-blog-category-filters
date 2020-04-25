@@ -38,7 +38,8 @@ export default {
   props: {
     categories: Array,
     currentCategory: String,
-    currentCategoryIds: Array
+    currentCategoryIds: Array,
+    results: Number
   },
   methods: {
     updateCurrent(object) {
