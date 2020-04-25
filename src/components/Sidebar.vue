@@ -6,8 +6,8 @@
           <input type="checkbox" 
           :value="category.slug" 
           :id="category.slug" 
-          :checked="category.slug === currentCategory"
-          v-on:change="updateCurrent({category: category.slug, id: category.id})"
+          :checked="category.selected"
+          v-on:change="updateCurrent({category: category.slug, id: category.id, selected: !category.selected})"
         >
         <label :for="category.slug">{{ category.name }}</label>
 
@@ -16,8 +16,8 @@
               <input type="checkbox" 
                 :value="child.slug" 
                 :id="child.slug" 
-                :checked="child.slug === currentCategory"
-                v-on:change="updateCurrent({category: child.slug, id: child.id})"
+                :checked="child.selected"
+                v-on:change="updateCurrent({category: child.slug, id: child.id, selected: !child.selected})"
               >
               <label :for="category.slug">{{ child.name }}</label>
             </li>

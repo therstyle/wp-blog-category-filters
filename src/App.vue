@@ -25,7 +25,7 @@ export default {
       currentCategory: 'uncategorized',
       currentId: 1,
       currentPage: 1,
-      currentCats: [1, 2],
+      currentCategoryIds: [],
       loading: false
     }
   },
@@ -42,7 +42,7 @@ export default {
       this.categories = data;
     },
     loadPosts: async function(id) {
-      const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?categories=${id}`);
+      const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?categories=${id}&page=${this.currentPage}`);
       const data = await response.json();
       console.log(data);
       this.posts = data;
@@ -50,7 +50,31 @@ export default {
     updateCurrent(object) {
       this.currentCategory = object.category;
       this.currentId = object.id;
-      this.loadPosts(this.currentId);
+      this.categories.map(category => {
+        if(category.id === this.currentId) {
+          category.selected = object.selected;
+        }
+      });
+
+      this.categories.map(category => {
+        if (category.selected) {
+          this.currentCategoryIds = [...this.currentCategoryIds, category.id];
+        }
+        else {
+          let selectedCategories = [...this.categories];
+          let selectedIds = [];
+
+          selectedCategories = selectedCategories.filter(category => category.selected);
+          selectedCategories.map(category => {
+            selectedIds.push(category.id);
+          });
+
+          this.currentCategoryIds = selectedIds;
+        }
+      });
+
+      console.log(this.currentCategoryIds);
+      this.loadPosts(this.currentCategoryIds);
     }
   },
   mounted() {
