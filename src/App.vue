@@ -3,7 +3,10 @@
     <sidebar 
       :categories="categories"
       :currentCategory="currentCategory"
+      :currentCategoryIds="currentCategoryIds"
       v-on:updateCurrent="updateCurrent"
+      v-on:remove="removeFromSelected"
+      v-on:add="addToSelected"
     ></sidebar>
 
     <posts
@@ -25,7 +28,7 @@ export default {
       currentCategory: 'uncategorized',
       currentId: 1,
       currentPage: 1,
-      currentCategoryIds: [],
+      currentCategoryIds: [1],
       loading: false
     }
   },
@@ -38,48 +41,47 @@ export default {
     loadCats: async function() {
       const response = await fetch(`${wp.home_url}/wp-json/eight29/v1/categories`);
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
       this.categories = data;
     },
     loadPosts: async function(id) {
+      console.log(id);
+
       const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?categories=${id}&page=${this.currentPage}`);
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
       this.posts = data;
+    },
+    addToSelected(id) {
+      console.log('addToSelected');
+
+      if (!this.currentCategoryIds.includes(id)) {
+        this.currentCategoryIds = [...this.currentCategoryIds, id];
+      }
+  
+      console.log(this.currentCategoryIds);
+      this.loadPosts(this.currentCategoryIds);
+    },
+    removeFromSelected(id) {
+      console.log('removeFromSelected');
+      let selectedCategories = [...this.currentCategoryIds];
+      selectedCategories = selectedCategories.filter(categoryId => !id);
+
+      this.currentCategoryIds = selectedCategories.length === 0? this.currentCategoryIds = [0] : selectedCategories; 
+
+      this.loadPosts(this.currentCategoryIds);
     },
     updateCurrent(object) {
       this.currentCategory = object.category;
       this.currentId = object.id;
-      this.categories.map(category => {
-        if(category.id === this.currentId) {
-          category.selected = object.selected;
-        }
-      });
 
-      this.categories.map(category => {
-        if (category.selected) {
-          this.currentCategoryIds = [...this.currentCategoryIds, category.id];
-        }
-        else {
-          let selectedCategories = [...this.categories];
-          let selectedIds = [];
-
-          selectedCategories = selectedCategories.filter(category => category.selected);
-          selectedCategories.map(category => {
-            selectedIds.push(category.id);
-          });
-
-          this.currentCategoryIds = selectedIds;
-        }
-      });
-
+      console.log('current IDs')
       console.log(this.currentCategoryIds);
-      this.loadPosts(this.currentCategoryIds);
     }
   },
   mounted() {
     this.loadCats();
-    this.loadPosts(this.currentId);
+    this.loadPosts(this.currentCategoryIds);
   }
 }
 </script>
