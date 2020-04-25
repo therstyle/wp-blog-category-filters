@@ -1,5 +1,5 @@
 <template>
-  <div class="eight29-app">
+  <div class="eight29-app" ref="root">
     <sidebar 
       :categories="categories"
       :currentCategory="currentCategory"
@@ -10,7 +10,7 @@
       v-on:add="addToSelected"
     ></sidebar>
 
-    <posts
+    <posts ref="posts_root"
       :posts="posts"
       :currentPage="currentPage"
       :maxPages="maxPages"
@@ -61,6 +61,7 @@ export default {
       this.maxPages = parseInt(response.headers.get('X-WP-TotalPages'));
       this.results = parseInt(response.headers.get('X-WP-Total'));
       this.loading = false;
+      this.scrollUp();
     },
     resetSelected() {
       this.currentCategoryIds = [1];
@@ -103,7 +104,14 @@ export default {
         this.currentPage++;
         this.loadPosts();
       }
-    }
+    },
+    scrollUp() {
+      window.scroll({
+        behavior: 'smooth',
+        left: 0,
+        top: this.$refs['root'].offsetTop
+      });
+    },
   },
   mounted() {
     this.loadCats();

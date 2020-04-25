@@ -11,8 +11,6 @@
 
 .eight29-sidebar {
   grid-column: 1 / span 3;
-  background: gray;
-  padding: 16px;
   margin: 0;
 
   > ul {
@@ -42,8 +40,6 @@
 
 .eight29-posts {
   grid-column: 4 / span 9;
-  background: darkgray;
-  padding: 16px;
 
   > article {
     margin-bottom: 32px;
