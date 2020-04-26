@@ -55,13 +55,12 @@ export default {
     },
     loadPosts: async function() {
       this.loading = true;
-      const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?categories=${this.currentCategoryIds}&page=${this.currentPage}`);
+      const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?categories=${this.currentCategoryIds}&page=${this.currentPage}&_embed`);
       const data = await response.json();
       this.posts = data;
       this.maxPages = parseInt(response.headers.get('X-WP-TotalPages'));
       this.results = parseInt(response.headers.get('X-WP-Total'));
       this.loading = false;
-      this.scrollUp();
     },
     resetSelected() {
       this.currentCategoryIds = [1];
@@ -97,12 +96,14 @@ export default {
       if (!this.currentPage <= 1) {
         this.currentPage--;
         this.loadPosts();
+        this.scrollUp();
       }
     },
     pageNext() {
       if (!(this.currentPage >= this.maxPages)){
         this.currentPage++;
         this.loadPosts();
+        this.scrollUp();
       }
     },
     scrollUp() {

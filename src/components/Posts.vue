@@ -2,8 +2,11 @@
   <section class="eight29-posts">
     <template v-if="posts && posts.length > 0">
       <article v-for="post in posts" :key="post.id">
+        <figure v-if="post._embedded['wp:featuredmedia']" class="featured-image">
+          <img :src="post._embedded['wp:featuredmedia'][0].media_details.sizes.full.source_url" :alt="post._embedded['wp:featuredmedia'][0].title.rendered">
+        </figure>
         <h4><a :href="post.link" v-html="post.title.rendered"></a></h4>
-        <div class="excerpt" v-html="post.excerpt.rendered"></div>
+        <div v-if="post.excerpt" class="excerpt" v-html="post.excerpt.rendered"></div>
       </article>
 
       <ul class="pagination">

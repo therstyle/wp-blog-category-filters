@@ -1,6 +1,10 @@
 .eight29-app {
   max-width: 100% !important;
 
+  img {
+    max-width: 100%;
+  }
+
   button[disabled="disabled"],
   button:disabled {
     opacity: .75;
