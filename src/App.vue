@@ -21,6 +21,7 @@
       :displayDate="displayDate"
       :displayCategories="displayCategories"
       :currentCategoryIds="currentCategoryIds"
+      :style="postsCssVars"
       v-on:updateCurrent="updateCurrent"
       v-on:remove="removeFromSelected"
       v-on:add="addToSelected"
@@ -36,6 +37,13 @@ import Sidebar from './components/Sidebar';
 import Posts from './components/Posts';
 
 export default {
+  computed: {
+    postsCssVars() {
+      return {
+        '--posts-per-row': this.postsPerRow
+      }
+    }
+  },
   data() {
     return {
       test: 'something',
