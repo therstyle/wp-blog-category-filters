@@ -14,7 +14,8 @@ export default {
   props: {
     post: Object,
     featuredImage: Boolean,
-    displayFeaturedImage: Boolean
+    displayFeaturedImage: Boolean,
+    currentCategoryIds: Array
   },
   components: {
     FeaturedImage

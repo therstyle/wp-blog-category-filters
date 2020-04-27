@@ -1,6 +1,6 @@
 <template>
-  <div class="eight29-app" ref="root">
-    <sidebar 
+  <div class="eight29-app" :class="{'no-sidebar' : !displaySideBar}" ref="root">
+    <sidebar v-if="displaySideBar" 
       :categories="categories"
       :currentCategory="currentCategory"
       :currentCategoryIds="currentCategoryIds"
@@ -17,6 +17,10 @@
       :results="results"
       :postStyle="postStyle"
       :displayFeaturedImage="displayFeaturedImage"
+      :currentCategoryIds="currentCategoryIds"
+      v-on:updateCurrent="updateCurrent"
+      v-on:remove="removeFromSelected"
+      v-on:add="addToSelected"
       v-on:reset="resetSelected"
       v-on:pagePrev="pagePrev"
       v-on:pageNext="pageNext"
@@ -41,6 +45,7 @@ export default {
       postsPerRow: parseInt(wp.post_per_row),
       postStyle: wp.post_style ? wp.post_style : 'PostCard',
       displayFeaturedImage: wp.display_featured_image === "1" ? true : false,
+      displaySideBar: wp.display_sidebar === "1" ? true : false,
       maxPages: 1,
       currentCategoryIds: [1],
       results: 0,
@@ -84,7 +89,7 @@ export default {
     removeFromSelected(id) {
       console.log('removeFromSelected');
       let selectedCategories = [...this.currentCategoryIds];
-      selectedCategories = selectedCategories.filter(categoryId => !id);
+      selectedCategories = selectedCategories.filter(categoryId => categoryId !== id);
 
       this.currentCategoryIds = selectedCategories.length === 0 ? this.currentCategoryIds = [0] : selectedCategories;
 
