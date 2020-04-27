@@ -72,15 +72,12 @@ export default {
     },
     updateCurrent(object) {
       this.$emit('updateCurrent', object);
-      console.log('moving up the chain');
     },
     removeFromSelected(id) {
       this.$emit('remove', id);
-      console.log('moving up the chain');
     },
     addToSelected(id) {
       this.$emit('add', id);
-      console.log('moving up the chain');
     }
   }
 }
