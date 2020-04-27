@@ -2,12 +2,12 @@
   <article class="eight29-post eight29-post-card">
     <FeaturedImage v-if="post._embedded['wp:featuredmedia'] && displayFeaturedImage" :image="post._embedded['wp:featuredmedia']"></FeaturedImage>
 
-    <div class="eight29-post-detail">
-      <time>{{post.formatted_date}}</time>
-      <span class="author">{{ post._embedded.author[0].name }}</span>
+    <div v-if="displayDate || displayAuthor" class="eight29-post-detail">
+      <time v-if="displayDate">{{post.formatted_date}}</time>
+      <span v-if="displayAuthor" class="author">{{ post._embedded.author[0].name }}</span>
     </div>
     <h4><a :href="post.link" v-html="post.title.rendered"></a></h4>
-    <div class="eight29-post-categories">
+    <div v-if="displayCategories" class="eight29-post-categories">
       <a 
         v-for="category in post._embedded['wp:term'][0]" 
         :key="category.id"
@@ -28,8 +28,10 @@ export default {
   name: 'PostCard',
   props: {
     post: Object,
-    featuredImage: Boolean,
     displayFeaturedImage: Boolean,
+    displayAuthor: Boolean,
+    displayDate: Boolean,
+    displayCategories: Boolean,
     currentCategoryIds: Array
   },
   components: {

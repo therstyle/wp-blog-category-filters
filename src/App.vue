@@ -17,6 +17,9 @@
       :results="results"
       :postStyle="postStyle"
       :displayFeaturedImage="displayFeaturedImage"
+      :displayAuthor="displayAuthor"
+      :displayDate="displayDate"
+      :displayCategories="displayCategories"
       :currentCategoryIds="currentCategoryIds"
       v-on:updateCurrent="updateCurrent"
       v-on:remove="removeFromSelected"
@@ -46,6 +49,9 @@ export default {
       postStyle: wp.post_style ? wp.post_style : 'PostCard',
       displayFeaturedImage: wp.display_featured_image === "1" ? true : false,
       displaySideBar: wp.display_sidebar === "1" ? true : false,
+      displayAuthor: wp.display_author === "1" ? true : false,
+      displayDate: wp.display_date === "1" ? true : false,
+      displayCategories: wp.display_categories === "1" ? true : false,
       maxPages: 1,
       currentCategoryIds: [1],
       results: 0,

@@ -7,6 +7,9 @@
         :is="postStyle"
         :post="post"
         :displayFeaturedImage="displayFeaturedImage"
+        :displayAuthor="displayAuthor"
+        :displayDate="displayDate"
+        :displayCategories="displayCategories"
         :currentCategoryIds="currentCategoryIds"
         v-on:updateCurrent="updateCurrent"
         v-on:remove="removeFromSelected"
@@ -50,8 +53,11 @@ export default {
     maxPages: Number,
     results: Number,
     postStyle: String,
+    currentCategoryIds: Array,
     displayFeaturedImage: Boolean,
-    currentCategoryIds: Array
+    displayAuthor: Boolean,
+    displayDate: Boolean,
+    displayCategories: Boolean
   },
   components: {
     PostCard,

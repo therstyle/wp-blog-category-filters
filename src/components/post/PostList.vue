@@ -13,8 +13,10 @@ export default {
   name: 'PostList',
   props: {
     post: Object,
-    featuredImage: Boolean,
     displayFeaturedImage: Boolean,
+    displayAuthor: Boolean,
+    displayDate: Boolean,
+    displayCategories: Boolean,
     currentCategoryIds: Array
   },
   components: {
