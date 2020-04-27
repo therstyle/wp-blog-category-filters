@@ -91,6 +91,21 @@ class eight29_filters {
                     'callback' => 'get_category_list'
           ));
     });
+
+    //format date into something usable
+    add_action('rest_api_init', function() {
+      register_rest_field(
+          array('post'),
+          'formatted_date',
+          array(
+              'get_callback'    => function() {
+                  return get_the_date();
+              },
+              'update_callback' => null,
+              'schema'          => null,
+          )
+      );
+    });
   }
 
   public function options_page() {

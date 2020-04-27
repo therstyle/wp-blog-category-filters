@@ -98,6 +98,15 @@
   }
 }
 
+.eight29-post-detail {
+  display: flex;
+  justify-content: space-between;
+
+  > :first-child {
+    margin-right: 16px;
+  }
+}
+
 @media only screen and (min-width: 992px) {
   .eight29-app {
     display: grid;
