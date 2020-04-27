@@ -16,7 +16,7 @@
       >{{ category.name }}</a>
     </div>
 
-    <div v-if="post.excerpt" class="excerpt" v-html="post.excerpt.rendered"></div>
+    <div v-if="post.excerpt" class="eight29-post-excerpt" v-html="post.excerpt.rendered"></div>
   </article>
 </template>
 
