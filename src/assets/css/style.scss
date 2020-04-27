@@ -1,3 +1,5 @@
+@import 'vars';
+
 .eight29-app {
   max-width: 100% !important;
 
@@ -10,6 +12,25 @@
     opacity: .75;
     cursor: not-allowed;
     pointer-events: none;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+
+    li {
+      list-style: none;
+      margin: 0;
+
+      &.page-current {
+        flex: 1;
+        margin: 0 16px;
+        text-align: center;
+      }
+    }
   }
 }
 
@@ -42,12 +63,16 @@
   }
 }
 
-.eight29-posts {
+.eight29-posts-container {
   grid-column: 4 / span 9;
+  padding: 0;
+}
+
+.eight29-posts {
+  display: grid;
+  gap: 32px;
 
   > article {
-    margin-bottom: 32px;
-
     &:last-child {
       margin-bottom: 0;
     }
@@ -65,30 +90,15 @@
   h4 {
     margin-bottom: 16px !important;
   }
-
-  .pagination {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0;
-    margin: 0;
-
-    li {
-      list-style: none;
-      margin: 0;
-
-      &.page-current {
-        flex: 1;
-        margin: 0 16px;
-        text-align: center;
-      }
-    }
-  }
 }
 
 @media only screen and (min-width: 992px) {
   .eight29-app {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
+  }
+
+  .eight29-posts {
+    grid-template-columns: repeat(var(--posts-per-row), 1fr);
   }
 }
