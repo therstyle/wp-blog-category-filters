@@ -23,7 +23,9 @@ class eight29_filters {
         'home_url' => home_url(),
         'post_style' => get_option('eight29_post_style'),
         'post_per_page' => get_option('eight29_post_per_page'),
-        'display_featured_image' =>  get_option('eight29_featured_image', 'true') === 'true' ? true : false
+        'post_per_row' => get_option('eight29_post_per_row'),
+        'display_featured_image' =>  get_option('eight29_featured_image', 'true') === 'true' ? true : false,
+        'display_sidebar' =>  get_option('eight29_sidebar') === 'true' ? true : false
       ];
 
       wp_localize_script('eight29_assets', 'wp', $params);
@@ -119,13 +121,18 @@ class eight29_filters {
     }
 
     add_action( 'admin_init', function() {
+      //Register Settings
+      register_setting('eight29_settings', 'eight29_sidebar');
       register_setting('eight29_settings', 'eight29_post_per_page');
       register_setting('eight29_settings', 'eight29_post_per_row');
       register_setting('eight29_settings', 'eight29_post_style');
       register_setting('eight29_settings', 'eight29_featured_image');
 
+      //Sections
       add_settings_section('eight29_post_settings_section', 'Post Style Settings', 'eight29_post_settings_section', 'eight29_settings');
 
+      //Settings Fields
+      add_settings_field( 'eight29_sidebar', 'Display Categories Sidebar?', 'eight29_sidebar', 'eight29_settings', 'eight29_post_settings_section' );
       add_settings_field( 'eight29_post_per_page', 'Posts Per Page', 'eight29_post_per_page', 'eight29_settings', 'eight29_post_settings_section' );
       add_settings_field( 'eight29_post_per_row', 'Posts Per Row', 'eight29_post_per_row', 'eight29_settings', 'eight29_post_settings_section' );
       add_settings_field( 'eight29_post_style', 'Post Style', 'eight29_post_style', 'eight29_settings', 'eight29_post_settings_section' );
@@ -134,6 +141,14 @@ class eight29_filters {
 
     function eight29_post_settings_section() {
       //front end description text
+    }
+
+    function eight29_sidebar() {
+      $value = get_option('eight29_sidebar', 'true');
+      echo '<select name="eight29_sidebar" id="eight29_sidebar">
+      <option value="true" '.($value === 'true' ? 'selected="selected"' : null).'>Yes</option>
+      <option value="false" '.($value === 'false' ? 'selected="selected"' : null).'>No</option>
+      </select>';
     }
 
     function eight29_post_per_page() {

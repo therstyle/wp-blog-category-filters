@@ -63,6 +63,12 @@
   }
 }
 
+.no-sidebar {
+  .eight29-posts-container {
+    grid-column: 1 / span 12;
+  }
+}
+
 .eight29-posts-container {
   grid-column: 4 / span 9;
   padding: 0;

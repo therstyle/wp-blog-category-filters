@@ -1,6 +1,6 @@
 <template>
-  <div class="eight29-app" ref="root">
-    <sidebar 
+  <div class="eight29-app" :class="{'no-sidebar' : !displaySideBar}" ref="root">
+    <sidebar v-if="displaySideBar" 
       :categories="categories"
       :currentCategory="currentCategory"
       :currentCategoryIds="currentCategoryIds"
@@ -41,6 +41,7 @@ export default {
       postsPerRow: parseInt(wp.post_per_row),
       postStyle: wp.post_style ? wp.post_style : 'PostCard',
       displayFeaturedImage: wp.display_featured_image === "1" ? true : false,
+      displaySideBar: wp.display_sidebar === "1" ? true : false,
       maxPages: 1,
       currentCategoryIds: [1],
       results: 0,
