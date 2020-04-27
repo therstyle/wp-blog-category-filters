@@ -17,6 +17,10 @@
       :results="results"
       :postStyle="postStyle"
       :displayFeaturedImage="displayFeaturedImage"
+      :currentCategoryIds="currentCategoryIds"
+      v-on:updateCurrent="updateCurrent"
+      v-on:remove="removeFromSelected"
+      v-on:add="addToSelected"
       v-on:reset="resetSelected"
       v-on:pagePrev="pagePrev"
       v-on:pageNext="pageNext"
@@ -85,7 +89,7 @@ export default {
     removeFromSelected(id) {
       console.log('removeFromSelected');
       let selectedCategories = [...this.currentCategoryIds];
-      selectedCategories = selectedCategories.filter(categoryId => !id);
+      selectedCategories = selectedCategories.filter(categoryId => categoryId !== id);
 
       this.currentCategoryIds = selectedCategories.length === 0 ? this.currentCategoryIds = [0] : selectedCategories;
 
