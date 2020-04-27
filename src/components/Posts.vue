@@ -7,6 +7,10 @@
         :is="postStyle"
         :post="post"
         :displayFeaturedImage="displayFeaturedImage"
+        :currentCategoryIds="currentCategoryIds"
+        v-on:updateCurrent="updateCurrent"
+        v-on:remove="removeFromSelected"
+        v-on:add="addToSelected"
       ></component>
     </div>
 
@@ -46,7 +50,8 @@ export default {
     maxPages: Number,
     results: Number,
     postStyle: String,
-    displayFeaturedImage: Boolean
+    displayFeaturedImage: Boolean,
+    currentCategoryIds: Array
   },
   components: {
     PostCard,
@@ -64,6 +69,18 @@ export default {
     pageNext() {
       console.log('pageNext');
       this.$emit('pageNext');
+    },
+    updateCurrent(object) {
+      this.$emit('updateCurrent', object);
+      console.log('moving up the chain');
+    },
+    removeFromSelected(id) {
+      this.$emit('remove', id);
+      console.log('moving up the chain');
+    },
+    addToSelected(id) {
+      this.$emit('add', id);
+      console.log('moving up the chain');
     }
   }
 }
