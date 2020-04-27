@@ -107,6 +107,16 @@
   }
 }
 
+.eight29-post-categories {
+  &:hover {
+    cursor: pointer;
+  }
+
+  > :not(:last-child) {
+    margin-right: 8px;
+  }
+}
+
 @media only screen and (min-width: 992px) {
   .eight29-app {
     display: grid;
