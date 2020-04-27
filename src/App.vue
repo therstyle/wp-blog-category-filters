@@ -15,6 +15,8 @@
       :currentPage="currentPage"
       :maxPages="maxPages"
       :results="results"
+      :postStyle="postStyle"
+      :displayFeaturedImage="displayFeaturedImage"
       v-on:reset="resetSelected"
       v-on:pagePrev="pagePrev"
       v-on:pageNext="pageNext"
@@ -35,7 +37,10 @@ export default {
       currentCategory: 'uncategorized',
       currentId: 1,
       currentPage: 1,
-      postsPerPage: 10,
+      postsPerPage: parseInt(wp.post_per_page),
+      postsPerRow: parseInt(wp.post_per_row),
+      postStyle: wp.post_style ? wp.post_style : 'PostCard',
+      displayFeaturedImage: wp.display_featured_image === "1" ? true : false,
       maxPages: 1,
       currentCategoryIds: [1],
       results: 0,
@@ -55,7 +60,7 @@ export default {
     },
     loadPosts: async function() {
       this.loading = true;
-      const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?categories=${this.currentCategoryIds}&page=${this.currentPage}&_embed`);
+      const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?categories=${this.currentCategoryIds}&page=${this.currentPage}&per_page=${this.postsPerPage}&_embed`);
       const data = await response.json();
       this.posts = data;
       this.maxPages = parseInt(response.headers.get('X-WP-TotalPages'));
