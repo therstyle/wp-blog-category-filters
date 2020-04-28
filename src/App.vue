@@ -5,9 +5,9 @@
       :currentCategory="currentCategory"
       :currentCategoryIds="currentCategoryIds"
       :results="results"
-      v-on:updateCurrent="updateCurrent"
-      v-on:remove="removeFromSelected"
-      v-on:add="addToSelected"
+      v-on:updateCurrentSelection="updateCurrent"
+      v-on:update="updateSelected"
+      v-on:reset="resetSelected"
     ></sidebar>
 
     <posts ref="posts_root"
@@ -17,13 +17,20 @@
       :results="results"
       :postStyle="postStyle"
       :displayFeaturedImage="displayFeaturedImage"
+      :displayFeaturedImageSize="displayFeaturedImageSize"
+      :displayAuthor="displayAuthor"
+      :displayDate="displayDate"
+      :displayCategories="displayCategories"
       :currentCategoryIds="currentCategoryIds"
-      v-on:updateCurrent="updateCurrent"
-      v-on:remove="removeFromSelected"
-      v-on:add="addToSelected"
+      :style="postsCssVars"
+      v-on:updateCurrentSelection="updateCurrent"
+      v-on:update="updateSelected"
+      v-on:replaceCurrentSelection="updateCurrent"
+      v-on:replace="replaceSelected"
       v-on:reset="resetSelected"
       v-on:pagePrev="pagePrev"
       v-on:pageNext="pageNext"
+      v-on:pageUpdate="pageUpdate"
     ></posts>
   </div>
 </template>
@@ -33,6 +40,13 @@ import Sidebar from './components/Sidebar';
 import Posts from './components/Posts';
 
 export default {
+  computed: {
+    postsCssVars() {
+      return {
+        '--posts-per-row': this.postsPerRow
+      }
+    }
+  },
   data() {
     return {
       test: 'something',
@@ -44,8 +58,12 @@ export default {
       postsPerPage: parseInt(wp.post_per_page),
       postsPerRow: parseInt(wp.post_per_row),
       postStyle: wp.post_style ? wp.post_style : 'PostCard',
-      displayFeaturedImage: wp.display_featured_image === "1" ? true : false,
-      displaySideBar: wp.display_sidebar === "1" ? true : false,
+      displayFeaturedImage: wp.display_featured_image === '1' ? true : false,
+      displayFeaturedImageSize: wp.display_featured_image_size ? wp.display_featured_image_size : 'medium',
+      displaySideBar: wp.display_sidebar === '1' ? true : false,
+      displayAuthor: wp.display_author === '1' ? true : false,
+      displayDate: wp.display_date === '1' ? true : false,
+      displayCategories: wp.display_categories === '1' ? true : false,
       maxPages: 1,
       currentCategoryIds: [1],
       results: 0,
@@ -95,6 +113,70 @@ export default {
 
       this.loadPosts();
     },
+    updateSelected(id) {
+      console.log('replaceSelected');
+
+      if (this.currentCategoryIds.includes(id)) {
+        console.log('remove from array');
+        this.categories.forEach(category => {
+          if (category.id === id) {
+            this.removeFromSelected(category.id);
+
+            if (category.children && category.parent === 0) { //top level
+              category.children.forEach(child => {
+                this.removeFromSelected(child.id)
+              });
+            }
+
+            if (category.parent !== 0) {
+              const childIds = [];
+              
+              this.categories.forEach(category => { //search for children remove top level parent from selected
+                if (category.children) {
+                  category.children.forEach(child => {
+                    childIds.push(child.id);
+                  })
+
+                  if(childIds.includes(id) && category.parent === 0) {
+                    this.removeFromSelected(category.id);
+                  }
+                }
+              });
+            }
+          }
+        });
+      }
+      else {
+        console.log('add to array');
+        this.categories.forEach(category => {
+          if (category.id === id) {
+            this.addToSelected(id);
+
+            if (category.children && category.parent === 0) {
+              category.children.forEach(child => {
+                this.addToSelected(child.id)
+              });
+            }
+          }
+        });
+      }
+    },
+    replaceSelected(id) {
+      console.log('replaceSelected');
+      const ids = [];
+      ids.push(id);
+
+      this.categories.forEach(category => {
+        if (category.id === id && category.children) {
+          category.children.forEach(child => {
+            ids.push(child.id);
+          })
+        }
+      })
+
+      this.currentCategoryIds = ids;
+      this.loadPosts();
+    },
     updateCurrent(object) {
       this.currentCategory = object.category;
       this.currentId = object.id;
@@ -115,6 +197,11 @@ export default {
         this.loadPosts();
         this.scrollUp();
       }
+    },
+    pageUpdate(pageNumber) {
+      this.currentPage = pageNumber;
+      this.loadPosts();
+      this.scrollUp();
     },
     scrollUp() {
       window.scroll({

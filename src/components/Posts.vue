@@ -7,24 +7,32 @@
         :is="postStyle"
         :post="post"
         :displayFeaturedImage="displayFeaturedImage"
+        :displayFeaturedImageSize="displayFeaturedImageSize"
+        :displayAuthor="displayAuthor"
+        :displayDate="displayDate"
+        :displayCategories="displayCategories"
         :currentCategoryIds="currentCategoryIds"
-        v-on:updateCurrent="updateCurrent"
-        v-on:remove="removeFromSelected"
-        v-on:add="addToSelected"
+        v-on:updateCurrentSelection="updateCurrentSelection"
+        v-on:update="updateSelected"
+        v-on:replaceCurrentSelection="replaceCurrentSelection"
+        v-on:replace="replaceSelected"
       ></component>
     </div>
 
-    <ul v-if="posts && posts.length > 0" class="pagination">
-      <li class="page-prev">
+    <ul v-if="posts && posts.length > 0" class="eight29-pagination">
+      <li class="eight29-pagination-prev">
         <button 
           v-on:click="pagePrev"
           :disabled="currentPage <= 1"
         >Previous</button>
       </li>
 
-      <li class="page-current">{{ currentPage }}</li>
+      <li class="eight29-pagination-current">
+        <input class="eight29-current-page" v-on:change="checkValidPageNumber" type="number" v-model="currentPageDisplayed" :max="maxPages">
+        <span>/ {{ maxPages }}</span>
+      </li>
 
-      <li class="page-next">
+      <li class="eight29-pagination-next">
         <button 
           v-on:click="pageNext"
           :disabled="currentPage >= maxPages"
@@ -44,14 +52,23 @@ import PostList from './post/PostList';
 
 export default {
   name: 'Posts',
+  data() {
+    return {
+      currentPageDisplayed: 0
+    }
+  },
   props: {
     posts: Array,
     currentPage: Number,
     maxPages: Number,
     results: Number,
     postStyle: String,
+    currentCategoryIds: Array,
     displayFeaturedImage: Boolean,
-    currentCategoryIds: Array
+    displayFeaturedImageSize: String,
+    displayAuthor: Boolean,
+    displayDate: Boolean,
+    displayCategories: Boolean
   },
   components: {
     PostCard,
@@ -70,18 +87,32 @@ export default {
       console.log('pageNext');
       this.$emit('pageNext');
     },
-    updateCurrent(object) {
-      this.$emit('updateCurrent', object);
-      console.log('moving up the chain');
+    updateCurrentSelection(object) {
+      this.$emit('updateCurrentSelection', object);
     },
-    removeFromSelected(id) {
-      this.$emit('remove', id);
-      console.log('moving up the chain');
+    updateSelected(id) {
+      this.$emit('update', id);
     },
-    addToSelected(id) {
-      this.$emit('add', id);
-      console.log('moving up the chain');
+    replaceCurrentSelection(object) {
+      this.$emit('replaceCurrentSelection', object);
+    },
+    replaceSelected(id) {
+      this.$emit('replace', id);
+    },
+    checkValidPageNumber() {
+      console.log('checking page');
+      if (this.currentPageDisplayed > this.maxPages) {
+        this.currentPageDisplayed = this.maxPages;
+      }
+      else if (this.currentPageDisplayed < 1) {
+        this.currentPageDisplayed = 1;
+      }
+
+      this.$emit('pageUpdate', parseInt(this.currentPageDisplayed));
     }
+  },
+  mounted() {
+    this.currentPageDisplayed = this.currentPage;
   }
 }
 </script>

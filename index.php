@@ -24,8 +24,12 @@ class eight29_filters {
         'post_style' => get_option('eight29_post_style'),
         'post_per_page' => get_option('eight29_post_per_page'),
         'post_per_row' => get_option('eight29_post_per_row'),
-        'display_featured_image' =>  get_option('eight29_featured_image', 'true') === 'true' ? true : false,
-        'display_sidebar' =>  get_option('eight29_sidebar') === 'true' ? true : false
+        'display_featured_image' =>  get_option('eight29_featured_image') === 'true' ? true : false,
+        'display_featured_image_size' => get_option('eight29_featured_image_size'),
+        'display_sidebar' =>  get_option('eight29_sidebar') === 'true' ? true : false,
+        'display_author' =>  get_option('eight29_author') === 'true' ? true : false,
+        'display_date' =>  get_option('eight29_date') === 'true' ? true : false,
+        'display_categories' =>  get_option('eight29_categories') === 'true' ? true : false
       ];
 
       wp_localize_script('eight29_assets', 'wp', $params);
@@ -106,6 +110,22 @@ class eight29_filters {
           )
       );
     });
+
+    //Add featured image srcset to rest API
+    add_action('rest_api_init', function() {
+      register_rest_field(
+          array('post'),
+          'featured_image_srcset',
+          array(
+              'get_callback'    => function($object, $field_name, $request) {
+                  $data = wp_get_attachment_image_srcset($object['featured_media'], get_option('eight29_featured_image_size'));
+                  return $data;
+              },
+              'update_callback' => null,
+              'schema'          => null,
+          )
+      );
+    });
   }
 
   public function options_page() {
@@ -142,6 +162,10 @@ class eight29_filters {
       register_setting('eight29_settings', 'eight29_post_per_row');
       register_setting('eight29_settings', 'eight29_post_style');
       register_setting('eight29_settings', 'eight29_featured_image');
+      register_setting('eight29_settings', 'eight29_featured_image_size');
+      register_setting('eight29_settings', 'eight29_author');
+      register_setting('eight29_settings', 'eight29_date');
+      register_setting('eight29_settings', 'eight29_categories');
 
       //Sections
       add_settings_section('eight29_post_settings_section', 'Post Style Settings', 'eight29_post_settings_section', 'eight29_settings');
@@ -152,6 +176,10 @@ class eight29_filters {
       add_settings_field( 'eight29_post_per_row', 'Posts Per Row', 'eight29_post_per_row', 'eight29_settings', 'eight29_post_settings_section' );
       add_settings_field( 'eight29_post_style', 'Post Style', 'eight29_post_style', 'eight29_settings', 'eight29_post_settings_section' );
       add_settings_field( 'eight29_featured_image', 'Display Featured Image?', 'eight29_featured_image', 'eight29_settings', 'eight29_post_settings_section' );
+      add_settings_field( 'eight29_featured_image_size', 'Featured Image Size?', 'eight29_featured_image_size', 'eight29_settings', 'eight29_post_settings_section' );
+      add_settings_field( 'eight29_author', 'Display Author Name?', 'eight29_author', 'eight29_settings', 'eight29_post_settings_section' );
+      add_settings_field( 'eight29_date', 'Display Post Date?', 'eight29_date', 'eight29_settings', 'eight29_post_settings_section' );
+      add_settings_field( 'eight29_categories', 'Display Post Categories?', 'eight29_categories', 'eight29_settings', 'eight29_post_settings_section' );
     });
 
     function eight29_post_settings_section() {
@@ -167,17 +195,17 @@ class eight29_filters {
     }
 
     function eight29_post_per_page() {
-      $value = get_option('eight29_post_per_page');
+      $value = get_option('eight29_post_per_page', '10');
       echo '<input name="eight29_post_per_page" id="eight29_post_per_page" type="number" value="'.$value.'" max="50">';
     }
 
     function eight29_post_per_row() {
-      $value = get_option('eight29_post_per_row');
+      $value = get_option('eight29_post_per_row', '1');
       echo '<input name="eight29_post_per_row" id="eight29_post_per_row" type="number" value="'.$value.'" max="4">';
     }
 
     function eight29_post_style() {
-      $value = get_option('eight29_post_style');
+      $value = get_option('eight29_post_style', 'PostCard');
       echo '<select name="eight29_post_style" id="eight29_post_style">
       <option value="PostCard" '.($value === 'PostCard' ? 'selected="selected"' : null).'>Card</option>
       <option value="PostList" '.($value === 'PostList' ? 'selected="selected"' : null).'>List</option>
@@ -185,8 +213,42 @@ class eight29_filters {
     }
 
     function eight29_featured_image() {
-      $value = get_option('eight29_featured_image');
+      $value = get_option('eight29_featured_image', true);
       echo '<select name="eight29_featured_image" id="eight29_featured_image">
+      <option value="true" '.($value === 'true' ? 'selected="selected"' : null).'>Yes</option>
+      <option value="false" '.($value === 'false' ? 'selected="selected"' : null).'>No</option>
+      </select>';
+    }
+
+    function eight29_featured_image_size() {
+      $value = get_option('eight29_featured_image_size', 'medium');
+      $sizes = get_intermediate_image_sizes();
+      echo '<select name="eight29_featured_image_size" id="eight29_featured_image_size">';
+      foreach($sizes as $size) {
+        echo '<option value="'.$size.'" '.($value === $size ? 'selected="selected"' : null).'>'.$size.'</option>';
+      }
+      echo '</select>';
+    }
+
+    function eight29_author() {
+      $value = get_option('eight29_author', true);
+      echo '<select name="eight29_author" id="eight29_author">
+      <option value="true" '.($value === 'true' ? 'selected="selected"' : null).'>Yes</option>
+      <option value="false" '.($value === 'false' ? 'selected="selected"' : null).'>No</option>
+      </select>';
+    }
+
+    function eight29_date() {
+      $value = get_option('eight29_date', true);
+      echo '<select name="eight29_date" id="eight29_date">
+      <option value="true" '.($value === 'true' ? 'selected="selected"' : null).'>Yes</option>
+      <option value="false" '.($value === 'false' ? 'selected="selected"' : null).'>No</option>
+      </select>';
+    }
+
+    function eight29_categories() {
+      $value = get_option('eight29_categories', true);
+      echo '<select name="eight29_categories" id="eight29_categories">
       <option value="true" '.($value === 'true' ? 'selected="selected"' : null).'>Yes</option>
       <option value="false" '.($value === 'false' ? 'selected="selected"' : null).'>No</option>
       </select>';

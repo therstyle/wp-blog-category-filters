@@ -3,6 +3,14 @@
 .eight29-app {
   max-width: 100% !important;
 
+  a {
+    text-decoration: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
   img {
     max-width: 100%;
   }
@@ -14,7 +22,7 @@
     pointer-events: none;
   }
 
-  .pagination {
+  .eight29-pagination {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -25,22 +33,32 @@
       list-style: none;
       margin: 0;
 
-      &.page-current {
+      &.eight29-pagination-current {
         flex: 1;
         margin: 0 16px;
         text-align: center;
       }
     }
   }
+
+  .eight29-current-page {
+    display: inline-block;
+    width: 64px;
+    text-align: center;
+  }
 }
 
 .eight29-sidebar {
   grid-column: 1 / span 3;
-  margin: 0;
+  margin: 0 0 32px 0;
 
   > ul {
     padding: 0;
-    margin: 0;
+    margin: 0 0 32px 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     ul {
       padding-left: 24px;
@@ -52,7 +70,7 @@
     margin-left: 0;
   }
 
-  .category {
+  .eight29-category {
     display: flex;
     align-items: center;
 
@@ -84,17 +102,14 @@
     }
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin-top: 0 !important;
-  }
+  .eight29-post {
+    display: flex;
+    flex-direction: column;
 
-  h4 {
-    margin-bottom: 16px !important;
+    .eight29-post-title {
+      margin-left: 0;
+      margin-right: 0;
+    }
   }
 }
 
@@ -108,19 +123,38 @@
 }
 
 .eight29-post-categories {
-  &:hover {
-    cursor: pointer;
-  }
-
   > :not(:last-child) {
     margin-right: 8px;
   }
+}
+
+.eight29-sidebar-detail {
+  display: flex;
+  justify-content: space-between;
+}
+
+.eight29-reset {
+  > span {
+    margin-right: 8px;
+  }
+}
+
+.eight29-icon {
+  width: 100%;
+  max-width: 16px;
+  max-height: 16px;
+  display: inline-block;
 }
 
 @media only screen and (min-width: 992px) {
   .eight29-app {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
+  }
+
+  .eight29-sidebar {
+    margin-bottom: 0;
+    margin-right: 32px;
   }
 
   .eight29-posts {
