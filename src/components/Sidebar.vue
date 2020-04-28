@@ -2,6 +2,10 @@
   <form class="eight29-sidebar">
     <ul class="eight29-sidebar-detail">
       <li>
+        <span>Posts ({{ results }})</span>
+      </li>
+      
+      <li>
         <a class="eight29-reset" v-on:click.prevent="reset">
           <span>Reset</span>
           <ResetIcon></ResetIcon>
