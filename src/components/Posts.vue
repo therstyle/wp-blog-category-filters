@@ -26,7 +26,10 @@
         >Previous</button>
       </li>
 
-      <li class="eight29-pagination-current">{{ currentPage }}</li>
+      <li class="eight29-pagination-current">
+        <input class="eight29-current-page" v-on:change="checkValidPageNumber" type="number" v-model="currentPageDisplayed" :max="maxPages">
+        <span>/ {{ maxPages }}</span>
+      </li>
 
       <li class="eight29-pagination-next">
         <button 
@@ -48,6 +51,22 @@ import PostList from './post/PostList';
 
 export default {
   name: 'Posts',
+  data() {
+    return {
+      currentPageDisplayed: 0
+    }
+  },
+  computed: {
+    // currentPageDisplayed: {
+    //   get(value) {
+    //     return value;
+    //   },
+    //   set(value) {
+    //     console.log('do something...' + value);
+    //     return value;
+    //   }
+    // }
+  },
   props: {
     posts: Array,
     currentPage: Number,
@@ -88,7 +107,21 @@ export default {
     },
     replaceSelected(id) {
       this.$emit('replace', id);
+    },
+    checkValidPageNumber() {
+      console.log('checking page');
+      if (this.currentPageDisplayed > this.maxPages) {
+        this.currentPageDisplayed = this.maxPages;
+      }
+      else if (this.currentPageDisplayed < 1) {
+        this.currentPageDisplayed = 1;
+      }
+
+      this.$emit('pageUpdate', parseInt(this.currentPageDisplayed));
     }
+  },
+  mounted() {
+    this.currentPageDisplayed = this.currentPage;
   }
 }
 </script>

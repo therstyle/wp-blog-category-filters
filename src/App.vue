@@ -29,6 +29,7 @@
       v-on:reset="resetSelected"
       v-on:pagePrev="pagePrev"
       v-on:pageNext="pageNext"
+      v-on:pageUpdate="pageUpdate"
     ></posts>
   </div>
 </template>
@@ -194,6 +195,11 @@ export default {
         this.loadPosts();
         this.scrollUp();
       }
+    },
+    pageUpdate(pageNumber) {
+      this.currentPage = pageNumber;
+      this.loadPosts();
+      this.scrollUp();
     },
     scrollUp() {
       window.scroll({
