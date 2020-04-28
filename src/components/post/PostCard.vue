@@ -16,7 +16,7 @@
       >{{ category.name }}</a>
     </div>
 
-    <div v-if="post.excerpt" class="eight29-post-excerpt" v-html="post.excerpt.rendered"></div>
+    <div v-if="post.excerpt" class="eight29-post-excerpt" v-html="theExcerpt"></div>
   </article>
 </template>
 
@@ -26,13 +26,19 @@ import Selection from '../../mixins/Selection';
 
 export default {
   name: 'PostCard',
+  computed: {
+    theExcerpt() {
+      const content = this.post.excerpt.rendered;
+      return content.replace('[&hellip;]', `... <a href="${this.post.link}">Read More</a>`);
+    }
+  },
   props: {
     post: Object,
     displayFeaturedImage: Boolean,
     displayAuthor: Boolean,
     displayDate: Boolean,
     displayCategories: Boolean,
-    currentCategoryIds: Array
+    currentCategoryIds: Array,
   },
   components: {
     FeaturedImage

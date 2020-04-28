@@ -3,6 +3,14 @@
 .eight29-app {
   max-width: 100% !important;
 
+  a {
+    text-decoration: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
   img {
     max-width: 100%;
   }
@@ -42,7 +50,7 @@
 
 .eight29-sidebar {
   grid-column: 1 / span 3;
-  margin: 0;
+  margin: 0 0 32px 0;
 
   > ul {
     padding: 0;
@@ -115,20 +123,12 @@
 }
 
 .eight29-post-categories {
-  &:hover {
-    cursor: pointer;
-  }
-
   > :not(:last-child) {
     margin-right: 8px;
   }
 }
 
 .eight29-reset {
-  &:hover {
-    cursor: pointer;
-  }
-
   > span {
     margin-right: 8px;
   }
@@ -145,6 +145,10 @@
   .eight29-app {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
+  }
+
+  .eight29-sidebar {
+    margin-bottom: 0;
   }
 
   .eight29-posts {
