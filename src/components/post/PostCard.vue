@@ -6,7 +6,7 @@
       <time v-if="displayDate">{{post.formatted_date}}</time>
       <span v-if="displayAuthor" class="author">{{ post._embedded.author[0].name }}</span>
     </div>
-    <h4><a :href="post.link" v-html="post.title.rendered"></a></h4>
+    <h4 class="eight29-post-title"><a :href="post.link" v-html="post.title.rendered"></a></h4>
     <div v-if="displayCategories" class="eight29-post-categories">
       <a 
         v-for="category in post._embedded['wp:term'][0]" 

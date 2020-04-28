@@ -18,17 +18,17 @@
       ></component>
     </div>
 
-    <ul v-if="posts && posts.length > 0" class="pagination">
-      <li class="page-prev">
+    <ul v-if="posts && posts.length > 0" class="eight29-pagination">
+      <li class="eight29-pagination-prev">
         <button 
           v-on:click="pagePrev"
           :disabled="currentPage <= 1"
         >Previous</button>
       </li>
 
-      <li class="page-current">{{ currentPage }}</li>
+      <li class="eight29-pagination-current">{{ currentPage }}</li>
 
-      <li class="page-next">
+      <li class="eight29-pagination-next">
         <button 
           v-on:click="pageNext"
           :disabled="currentPage >= maxPages"

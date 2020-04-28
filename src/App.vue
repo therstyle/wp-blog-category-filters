@@ -7,6 +7,7 @@
       :results="results"
       v-on:updateCurrentSelection="updateCurrent"
       v-on:update="updateSelected"
+      v-on:reset="resetSelected"
     ></sidebar>
 
     <posts ref="posts_root"

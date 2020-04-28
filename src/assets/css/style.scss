@@ -14,7 +14,7 @@
     pointer-events: none;
   }
 
-  .pagination {
+  .eight29-pagination {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -25,7 +25,7 @@
       list-style: none;
       margin: 0;
 
-      &.page-current {
+      &.eight29-pagination-current {
         flex: 1;
         margin: 0 16px;
         text-align: center;
@@ -40,7 +40,11 @@
 
   > ul {
     padding: 0;
-    margin: 0;
+    margin: 0 0 32px 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     ul {
       padding-left: 24px;
@@ -52,7 +56,7 @@
     margin-left: 0;
   }
 
-  .category {
+  .eight29-category {
     display: flex;
     align-items: center;
 
@@ -84,17 +88,14 @@
     }
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin-top: 0 !important;
-  }
+  .eight29-post {
+    display: flex;
+    flex-direction: column;
 
-  h4 {
-    margin-bottom: 16px !important;
+    .eight29-post-title {
+      margin-left: 0;
+      margin-right: 0;
+    }
   }
 }
 
@@ -115,6 +116,23 @@
   > :not(:last-child) {
     margin-right: 8px;
   }
+}
+
+.eight29-reset {
+  &:hover {
+    cursor: pointer;
+  }
+
+  > span {
+    margin-right: 8px;
+  }
+}
+
+.eight29-icon {
+  width: 100%;
+  max-width: 16px;
+  max-height: 16px;
+  display: inline-block;
 }
 
 @media only screen and (min-width: 992px) {
