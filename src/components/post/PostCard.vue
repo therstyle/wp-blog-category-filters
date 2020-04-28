@@ -1,6 +1,6 @@
 <template>
   <article class="eight29-post eight29-post-card">
-    <FeaturedImage v-if="post._embedded['wp:featuredmedia'] && displayFeaturedImage" :image="post._embedded['wp:featuredmedia']"></FeaturedImage>
+    <a :href="post.link" v-if="post._embedded['wp:featuredmedia'] && displayFeaturedImage"><FeaturedImage :image="post._embedded['wp:featuredmedia']"></FeaturedImage></a>
 
     <div v-if="displayDate || displayAuthor" class="eight29-post-detail">
       <time v-if="displayDate">{{post.formatted_date}}</time>
