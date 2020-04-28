@@ -12,8 +12,7 @@
         :displayCategories="displayCategories"
         :currentCategoryIds="currentCategoryIds"
         v-on:updateCurrentSelection="updateCurrentSelection"
-        v-on:remove="removeFromSelected"
-        v-on:add="addToSelected"
+        v-on:update="updateSelected"
         v-on:replaceCurrentSelection="replaceCurrentSelection"
         v-on:replace="replaceSelected"
       ></component>
@@ -81,11 +80,8 @@ export default {
     updateCurrentSelection(object) {
       this.$emit('updateCurrentSelection', object);
     },
-    removeFromSelected(id) {
-      this.$emit('remove', id);
-    },
-    addToSelected(id) {
-      this.$emit('add', id);
+    updateSelected(id) {
+      this.$emit('update', id);
     },
     replaceCurrentSelection(object) {
       this.$emit('replaceCurrentSelection', object);
