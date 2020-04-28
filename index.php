@@ -109,6 +109,22 @@ class eight29_filters {
           )
       );
     });
+
+    //Add featured image srcset to rest API
+    add_action('rest_api_init', function() {
+      register_rest_field(
+          array('post'),
+          'featured_image_srcset',
+          array(
+              'get_callback'    => function($object, $field_name, $request) {
+                  $data = wp_get_attachment_image_srcset($object['featured_media'], 'medium');
+                  return $data;
+              },
+              'update_callback' => null,
+              'schema'          => null,
+          )
+      );
+    });
   }
 
   public function options_page() {
