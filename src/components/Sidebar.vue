@@ -8,7 +8,7 @@
               :value="category.slug" 
               :id="category.slug" 
               :checked="currentCategoryIds.includes(category.id)"
-              v-on:change="updateCurrent({category: category.slug, id: category.id, children: category.children, selected: currentCategoryIds.includes(category.id)})"
+              v-on:change="updateCurrentSelection({category: category.slug, id: category.id, children: category.children, selected: currentCategoryIds.includes(category.id)})"
             >
             <label :for="category.slug">{{ category.name }}</label>
           </div>
@@ -20,7 +20,7 @@
                   :value="child.slug" 
                   :id="child.slug" 
                   :checked="currentCategoryIds.includes(child.id)"
-                  v-on:change="updateCurrent({category: child.slug, id: child.id, selected: currentCategoryIds.includes(child.id)})"
+                  v-on:change="updateCurrentSelection({category: child.slug, id: child.id, selected: currentCategoryIds.includes(child.id)})"
                 >
                 <label :for="child.slug">{{ child.name }}</label>
               </div>
@@ -33,8 +33,7 @@
 </template>
 
 <script>
-import updateCurrent from '../mixins/UpdateCurrent';
-import UpdateCurrent from '../mixins/UpdateCurrent';
+import Selection from '../mixins/Selection';
 
 export default {
   name: 'Sidebar',
@@ -44,6 +43,6 @@ export default {
     currentCategoryIds: Array,
     results: Number
   },
-  mixins: [UpdateCurrent]
+  mixins: [Selection]
 }
 </script>

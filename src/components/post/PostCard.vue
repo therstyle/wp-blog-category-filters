@@ -12,7 +12,7 @@
         v-for="category in post._embedded['wp:term'][0]" 
         :key="category.id"
         :data-attribute-selected="currentCategoryIds.includes(category.id)"
-        v-on:click.prevent="updateCurrent({ category: category.slug, id: category.id, children: category.children, selected: currentCategoryIds.includes(category.id) })"
+        v-on:click.prevent="replaceCurrentSelection({ category: category.slug, id: category.id, selected: currentCategoryIds.includes(category.id) })"
       >{{ category.name }}</a>
     </div>
 
@@ -22,7 +22,7 @@
 
 <script>
 import FeaturedImage from '../FeaturedImage.vue';
-import UpdateCurrent from '../../mixins/UpdateCurrent';
+import Selection from '../../mixins/Selection';
 
 export default {
   name: 'PostCard',
@@ -37,6 +37,6 @@ export default {
   components: {
     FeaturedImage
   },
-  mixins: [UpdateCurrent]
+  mixins: [Selection]
 }
 </script>

@@ -1,7 +1,7 @@
 export default {
   methods: {
-    updateCurrent(object) {
-      this.$emit('updateCurrent', object);
+    updateCurrentSelection(object) {
+      this.$emit('updateCurrentSelection', object);
       console.log(object);
 
       if(object.selected) {
@@ -24,6 +24,11 @@ export default {
           })
         }
       }
+    },
+    replaceCurrentSelection(object) {
+      console.log(object);
+      this.$emit('replaceCurrentSelection', object);
+      this.$emit('replace', object.id);
     }
   }
 }

@@ -11,9 +11,11 @@
         :displayDate="displayDate"
         :displayCategories="displayCategories"
         :currentCategoryIds="currentCategoryIds"
-        v-on:updateCurrent="updateCurrent"
+        v-on:updateCurrentSelection="updateCurrentSelection"
         v-on:remove="removeFromSelected"
         v-on:add="addToSelected"
+        v-on:replaceCurrentSelection="replaceCurrentSelection"
+        v-on:replace="replaceSelected"
       ></component>
     </div>
 
@@ -76,14 +78,20 @@ export default {
       console.log('pageNext');
       this.$emit('pageNext');
     },
-    updateCurrent(object) {
-      this.$emit('updateCurrent', object);
+    updateCurrentSelection(object) {
+      this.$emit('updateCurrentSelection', object);
     },
     removeFromSelected(id) {
       this.$emit('remove', id);
     },
     addToSelected(id) {
       this.$emit('add', id);
+    },
+    replaceCurrentSelection(object) {
+      this.$emit('replaceCurrentSelection', object);
+    },
+    replaceSelected(id) {
+      this.$emit('replace', id);
     }
   }
 }

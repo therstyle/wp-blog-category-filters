@@ -5,7 +5,7 @@
       :currentCategory="currentCategory"
       :currentCategoryIds="currentCategoryIds"
       :results="results"
-      v-on:updateCurrent="updateCurrent"
+      v-on:updateCurrentSelection="updateCurrent"
       v-on:remove="removeFromSelected"
       v-on:add="addToSelected"
     ></sidebar>
@@ -22,9 +22,11 @@
       :displayCategories="displayCategories"
       :currentCategoryIds="currentCategoryIds"
       :style="postsCssVars"
-      v-on:updateCurrent="updateCurrent"
+      v-on:updateCurrentSelection="updateCurrent"
       v-on:remove="removeFromSelected"
       v-on:add="addToSelected"
+      v-on:replaceCurrentSelection="updateCurrent"
+      v-on:replace="replaceSelected"
       v-on:reset="resetSelected"
       v-on:pagePrev="pagePrev"
       v-on:pageNext="pageNext"
@@ -107,6 +109,22 @@ export default {
 
       this.currentCategoryIds = selectedCategories.length === 0 ? this.currentCategoryIds = [0] : selectedCategories;
 
+      this.loadPosts();
+    },
+    replaceSelected(id) {
+      console.log('replaceSelected');
+      const ids = [];
+      ids.push(id);
+
+      this.categories.forEach(category => {
+        if (category.id === id && category.children) {
+          category.children.forEach(child => {
+            ids.push(child.id);
+          })
+        }
+      })
+
+      this.currentCategoryIds = ids;
       this.loadPosts();
     },
     updateCurrent(object) {
