@@ -56,17 +56,6 @@ export default {
       currentPageDisplayed: 0
     }
   },
-  computed: {
-    // currentPageDisplayed: {
-    //   get(value) {
-    //     return value;
-    //   },
-    //   set(value) {
-    //     console.log('do something...' + value);
-    //     return value;
-    //   }
-    // }
-  },
   props: {
     posts: Array,
     currentPage: Number,
