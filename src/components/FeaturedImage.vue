@@ -1,6 +1,6 @@
 <template>
   <figure class="featured-image">
-    <img :src="image[0].media_details.sizes['post-thumbnail'].source_url" :srcset="srcset" :alt="image[0].title.rendered">
+    <img :src="image[0].media_details.sizes[displayFeaturedImageSize].source_url" :srcset="srcset" :alt="image[0].title.rendered">
   </figure>
 </template>
 
@@ -23,7 +23,8 @@ export default {
   },
   props: {
     image: Array,
-    srcset: String
+    srcset: String,
+    displayFeaturedImageSize: String
   },
   mounted() {
     

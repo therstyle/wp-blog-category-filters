@@ -17,6 +17,7 @@
       :results="results"
       :postStyle="postStyle"
       :displayFeaturedImage="displayFeaturedImage"
+      :displayFeaturedImageSize="displayFeaturedImageSize"
       :displayAuthor="displayAuthor"
       :displayDate="displayDate"
       :displayCategories="displayCategories"
@@ -57,11 +58,12 @@ export default {
       postsPerPage: parseInt(wp.post_per_page),
       postsPerRow: parseInt(wp.post_per_row),
       postStyle: wp.post_style ? wp.post_style : 'PostCard',
-      displayFeaturedImage: wp.display_featured_image === "1" ? true : false,
-      displaySideBar: wp.display_sidebar === "1" ? true : false,
-      displayAuthor: wp.display_author === "1" ? true : false,
-      displayDate: wp.display_date === "1" ? true : false,
-      displayCategories: wp.display_categories === "1" ? true : false,
+      displayFeaturedImage: wp.display_featured_image === '1' ? true : false,
+      displayFeaturedImageSize: wp.display_featured_image_size ? wp.display_featured_image_size : 'medium',
+      displaySideBar: wp.display_sidebar === '1' ? true : false,
+      displayAuthor: wp.display_author === '1' ? true : false,
+      displayDate: wp.display_date === '1' ? true : false,
+      displayCategories: wp.display_categories === '1' ? true : false,
       maxPages: 1,
       currentCategoryIds: [1],
       results: 0,

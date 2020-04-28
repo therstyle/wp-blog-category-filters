@@ -25,6 +25,7 @@ class eight29_filters {
         'post_per_page' => get_option('eight29_post_per_page'),
         'post_per_row' => get_option('eight29_post_per_row'),
         'display_featured_image' =>  get_option('eight29_featured_image') === 'true' ? true : false,
+        'display_featured_image_size' => get_option('eight29_featured_image_size'),
         'display_sidebar' =>  get_option('eight29_sidebar') === 'true' ? true : false,
         'display_author' =>  get_option('eight29_author') === 'true' ? true : false,
         'display_date' =>  get_option('eight29_date') === 'true' ? true : false,
@@ -117,7 +118,7 @@ class eight29_filters {
           'featured_image_srcset',
           array(
               'get_callback'    => function($object, $field_name, $request) {
-                  $data = wp_get_attachment_image_srcset($object['featured_media'], 'medium');
+                  $data = wp_get_attachment_image_srcset($object['featured_media'], get_option('eight29_featured_image_size'));
                   return $data;
               },
               'update_callback' => null,
@@ -161,6 +162,7 @@ class eight29_filters {
       register_setting('eight29_settings', 'eight29_post_per_row');
       register_setting('eight29_settings', 'eight29_post_style');
       register_setting('eight29_settings', 'eight29_featured_image');
+      register_setting('eight29_settings', 'eight29_featured_image_size');
       register_setting('eight29_settings', 'eight29_author');
       register_setting('eight29_settings', 'eight29_date');
       register_setting('eight29_settings', 'eight29_categories');
@@ -174,6 +176,7 @@ class eight29_filters {
       add_settings_field( 'eight29_post_per_row', 'Posts Per Row', 'eight29_post_per_row', 'eight29_settings', 'eight29_post_settings_section' );
       add_settings_field( 'eight29_post_style', 'Post Style', 'eight29_post_style', 'eight29_settings', 'eight29_post_settings_section' );
       add_settings_field( 'eight29_featured_image', 'Display Featured Image?', 'eight29_featured_image', 'eight29_settings', 'eight29_post_settings_section' );
+      add_settings_field( 'eight29_featured_image_size', 'Featured Image Size?', 'eight29_featured_image_size', 'eight29_settings', 'eight29_post_settings_section' );
       add_settings_field( 'eight29_author', 'Display Author Name?', 'eight29_author', 'eight29_settings', 'eight29_post_settings_section' );
       add_settings_field( 'eight29_date', 'Display Post Date?', 'eight29_date', 'eight29_settings', 'eight29_post_settings_section' );
       add_settings_field( 'eight29_categories', 'Display Post Categories?', 'eight29_categories', 'eight29_settings', 'eight29_post_settings_section' );
@@ -217,6 +220,16 @@ class eight29_filters {
       </select>';
     }
 
+    function eight29_featured_image_size() {
+      $value = get_option('eight29_featured_image_size', 'medium');
+      $sizes = get_intermediate_image_sizes();
+      echo '<select name="eight29_featured_image_size" id="eight29_featured_image_size">';
+      foreach($sizes as $size) {
+        echo '<option value="'.$size.'" '.($value === $size ? 'selected="selected"' : null).'>'.$size.'</option>';
+      }
+      echo '</select>';
+    }
+
     function eight29_author() {
       $value = get_option('eight29_author', true);
       echo '<select name="eight29_author" id="eight29_author">
@@ -231,14 +244,14 @@ class eight29_filters {
       <option value="true" '.($value === 'true' ? 'selected="selected"' : null).'>Yes</option>
       <option value="false" '.($value === 'false' ? 'selected="selected"' : null).'>No</option>
       </select>';
+    }
 
-      function eight29_categories() {
-        $value = get_option('eight29_categories', true);
-        echo '<select name="eight29_categories" id="eight29_categories">
-        <option value="true" '.($value === 'true' ? 'selected="selected"' : null).'>Yes</option>
-        <option value="false" '.($value === 'false' ? 'selected="selected"' : null).'>No</option>
-        </select>';
-      }
+    function eight29_categories() {
+      $value = get_option('eight29_categories', true);
+      echo '<select name="eight29_categories" id="eight29_categories">
+      <option value="true" '.($value === 'true' ? 'selected="selected"' : null).'>Yes</option>
+      <option value="false" '.($value === 'false' ? 'selected="selected"' : null).'>No</option>
+      </select>';
     }
   }
 

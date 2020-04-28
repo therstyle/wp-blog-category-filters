@@ -4,6 +4,7 @@
       <FeaturedImage 
         :image="post._embedded['wp:featuredmedia']"
         :srcset="post.featured_image_srcset"
+        :displayFeaturedImageSize="displayFeaturedImageSize"
       ></FeaturedImage>
     </a>
 
@@ -40,6 +41,7 @@ export default {
   props: {
     post: Object,
     displayFeaturedImage: Boolean,
+    displayFeaturedImageSize: String,
     displayAuthor: Boolean,
     displayDate: Boolean,
     displayCategories: Boolean,

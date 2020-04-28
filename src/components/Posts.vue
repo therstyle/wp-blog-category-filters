@@ -7,6 +7,7 @@
         :is="postStyle"
         :post="post"
         :displayFeaturedImage="displayFeaturedImage"
+        :displayFeaturedImageSize="displayFeaturedImageSize"
         :displayAuthor="displayAuthor"
         :displayDate="displayDate"
         :displayCategories="displayCategories"
@@ -64,6 +65,7 @@ export default {
     postStyle: String,
     currentCategoryIds: Array,
     displayFeaturedImage: Boolean,
+    displayFeaturedImageSize: String,
     displayAuthor: Boolean,
     displayDate: Boolean,
     displayCategories: Boolean
