@@ -2,9 +2,9 @@
 defined('ABSPATH') or die();
 
 /**
-* Plugin Name: 829 Blog & Category Filters (Vue)
+* Plugin Name: 829 Blog & Category Filters
 * Plugin URI: https://829llc.com
-* Description: AJAX posts + shortcode
+* Description: Display blog index with category filtering with shortcode [eight29_filters]
 * Version: 1.0
 * Author: Chris Roberts
 * Author URI: https://829llc.com
