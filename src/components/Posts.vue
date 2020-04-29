@@ -21,10 +21,7 @@
 
     <ul v-if="posts && posts.length > 0" class="eight29-pagination">
       <li class="eight29-pagination-prev">
-        <button 
-          v-on:click="pagePrev"
-          :disabled="currentPage <= 1"
-        >Previous</button>
+        <AppButton v-on:clickEvent="pagePrev" :disabled="currentPage <= 1">Previous</AppButton>
       </li>
 
       <li class="eight29-pagination-current">
@@ -33,10 +30,7 @@
       </li>
 
       <li class="eight29-pagination-next">
-        <button 
-          v-on:click="pageNext"
-          :disabled="currentPage >= maxPages"
-        >Next</button>
+        <AppButton v-on:clickEvent="pageNext" :disabled="currentPage >= maxPages">Next</AppButton>
       </li>
     </ul>
 
@@ -47,8 +41,9 @@
 </template>
 
 <script>
-import PostCard from './post/PostCard';
-import PostList from './post/PostList';
+import PostCard from './post/PostCard.vue';
+import PostList from './post/PostList.vue';
+import AppButton from './layout/AppButton.vue';
 
 export default {
   name: 'Posts',
@@ -72,7 +67,8 @@ export default {
   },
   components: {
     PostCard,
-    PostList
+    PostList,
+    AppButton
   },
   methods: {
     resetSelected() {
