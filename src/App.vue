@@ -34,6 +34,14 @@ export default {
       return {
         '--posts-per-row': this.settings.postsPerRow
       }
+    },
+    categoryParamter() {
+      if(this.postData.currentCategoryIds.length !== 0) {
+        return `categories=${this.postData.currentCategoryIds}&`;
+      }
+      else {
+        return null;
+      }
     }
   },
   data() {
@@ -45,7 +53,7 @@ export default {
         currentId: 1,
         currentPage: 1,
         maxPages: 1,
-        currentCategoryIds: [1],
+        currentCategoryIds: [],
         results: 0,
         loading: false,
       },
@@ -76,7 +84,10 @@ export default {
     },
     loadPosts: async function() {
       this.postData.loading = true;
-      const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?categories=${this.postData.currentCategoryIds}&page=${this.postData.currentPage}&per_page=${this.settings.postsPerPage}&_embed`);
+      
+      console.log(`${wp.home_url}/wp-json/wp/v2/posts?${this.categoryParamter}page=${this.postData.currentPage}&per_page=${this.settings.postsPerPage}&_embed`);
+
+      const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?${this.categoryParamter}page=${this.postData.currentPage}&per_page=${this.settings.postsPerPage}&_embed`);
       const data = await response.json();
       this.postData.posts = data;
       this.postData.maxPages = parseInt(response.headers.get('X-WP-TotalPages'));
@@ -84,7 +95,7 @@ export default {
       this.postData.loading = false;
     },
     resetSelected() {
-      this.postData.currentCategoryIds = [1];
+      this.postData.currentCategoryIds = [];
       this.loadPosts();
     },
     addToSelected(id) {
@@ -102,8 +113,7 @@ export default {
       let selectedCategories = [...this.postData.currentCategoryIds];
       selectedCategories = selectedCategories.filter(categoryId => categoryId !== id);
 
-      this.postData.currentCategoryIds = selectedCategories.length === 0 ? this.postData.currentCategoryIds = [0] : selectedCategories;
-
+      this.postData.currentCategoryIds = selectedCategories;
       this.loadPosts();
     },
     updateSelected(id) {
@@ -165,7 +175,7 @@ export default {
             ids.push(child.id);
           })
         }
-      })
+      });
 
       this.postData.currentCategoryIds = ids;
       this.loadPosts();
