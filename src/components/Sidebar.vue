@@ -2,7 +2,7 @@
   <form class="eight29-sidebar">
     <ul class="eight29-sidebar-detail">
       <li>
-        <span>Posts ({{ results }})</span>
+        <span>Posts ({{ postData.results }})</span>
       </li>
       
       <li>
@@ -14,14 +14,14 @@
     </ul>
     
     <ul class="eight29-categories">
-      <template v-for="category in categories">
+      <template v-for="category in postData.categories">
         <li v-if="category.parent === 0" :key="category.id">
           <div class="eight29-category">
             <input type="checkbox" 
               :value="category.slug" 
               :id="category.slug" 
-              :checked="currentCategoryIds.includes(category.id)"
-              v-on:change="updateCurrentSelection({category: category.slug, id: category.id, children: category.children, selected: currentCategoryIds.includes(category.id)})"
+              :checked="postData.currentCategoryIds.includes(category.id)"
+              v-on:change="updateCurrentSelection({category: category.slug, id: category.id, children: category.children, selected: postData.currentCategoryIds.includes(category.id)})"
             >
             <label :for="category.slug">{{ category.name }} 
               <span v-if="settings.displayPostCounts" class="eight29-category-count">({{ category.count }})</span>
@@ -34,8 +34,8 @@
                 <input type="checkbox" 
                   :value="child.slug" 
                   :id="child.slug" 
-                  :checked="currentCategoryIds.includes(child.id)"
-                  v-on:change="updateCurrentSelection({category: child.slug, id: child.id, selected: currentCategoryIds.includes(child.id)})"
+                  :checked="postData.currentCategoryIds.includes(child.id)"
+                  v-on:change="updateCurrentSelection({category: child.slug, id: child.id, selected: postData.currentCategoryIds.includes(child.id)})"
                 >
                 <label :for="child.slug">{{ child.name }}
                   <span v-if="settings.displayPostCounts" class="eight29-category-count">({{ child.count }})</span>
@@ -59,10 +59,7 @@ export default {
     ResetIcon
   },
   props: {
-    categories: Array,
-    currentCategory: String,
-    currentCategoryIds: Array,
-    results: Number,
+    postData: Object,
     settings: Object
   },
   mixins: [Selection],

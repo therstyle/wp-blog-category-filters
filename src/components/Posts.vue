@@ -1,11 +1,11 @@
 <template>
   <section class="eight29-posts-container">
-    <div v-if="posts && posts.length > 0" class="eight29-posts">
+    <div v-if="postData.posts && postData.posts.length > 0" class="eight29-posts">
       <Post
-        v-for="post in posts"
+        v-for="post in postData.posts"
         :key="post.id"
         :post="post"
-        :currentCategoryIds="currentCategoryIds"
+        :currentCategoryIds="postData.currentCategoryIds"
         :settings="settings"
         v-on:updateCurrentSelection="updateCurrentSelection"
         v-on:update="updateSelected"
@@ -14,18 +14,18 @@
       ></Post>
     </div>
 
-    <ul v-if="posts && posts.length > 0" class="eight29-pagination">
+    <ul v-if="postData.posts && postData.posts.length > 0" class="eight29-pagination">
       <li class="eight29-pagination-prev">
-        <AppButton v-on:clickEvent="pagePrev" :disabled="currentPage <= 1">Previous</AppButton>
+        <AppButton v-on:clickEvent="pagePrev" :disabled="postData.currentPage <= 1">Previous</AppButton>
       </li>
 
       <li class="eight29-pagination-current">
-        <input class="eight29-current-page" v-on:change="checkValidPageNumber" type="number" v-model="currentPageDisplayed" :max="maxPages">
-        <span>/ {{ maxPages }}</span>
+        <input class="eight29-current-page" v-on:change="checkValidPageNumber" type="number" v-model="currentPageDisplayed" :max="postData.maxPages">
+        <span>/ {{ postData.maxPages }}</span>
       </li>
 
       <li class="eight29-pagination-next">
-        <AppButton v-on:clickEvent="pageNext" :disabled="currentPage >= maxPages">Next</AppButton>
+        <AppButton v-on:clickEvent="pageNext" :disabled="postData.currentPage >= postData.maxPages">Next</AppButton>
       </li>
     </ul>
 
@@ -47,11 +47,7 @@ export default {
     }
   },
   props: {
-    posts: Array,
-    currentPage: Number,
-    maxPages: Number,
-    results: Number,
-    currentCategoryIds: Array,
+    postData: Object,
     settings: Object
   },
   components: {
@@ -85,8 +81,8 @@ export default {
     },
     checkValidPageNumber() {
       console.log('checking page');
-      if (this.currentPageDisplayed > this.maxPages) {
-        this.currentPageDisplayed = this.maxPages;
+      if (this.currentPageDisplayed > this.postData.maxPages) {
+        this.currentPageDisplayed = this.postData.maxPages;
       }
       else if (this.currentPageDisplayed < 1) {
         this.currentPageDisplayed = 1;
