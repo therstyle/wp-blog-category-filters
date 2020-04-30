@@ -1,10 +1,9 @@
 <template>
   <section class="eight29-post eight29-posts-container">
     <div v-if="posts && posts.length > 0" class="eight29-posts">
-      <component
+      <Post
         v-for="post in posts"
-        :key="post.id" 
-        :is="settings.postStyle"
+        :key="post.id"
         :post="post"
         :currentCategoryIds="currentCategoryIds"
         :settings="settings"
@@ -12,7 +11,7 @@
         v-on:update="updateSelected"
         v-on:replaceCurrentSelection="replaceCurrentSelection"
         v-on:replace="replaceSelected"
-      ></component>
+      ></Post>
     </div>
 
     <ul v-if="posts && posts.length > 0" class="eight29-pagination">
@@ -37,8 +36,7 @@
 </template>
 
 <script>
-import PostCard from './post/PostCard.vue';
-import PostList from './post/PostList.vue';
+import Post from './Post.vue';
 import AppButton from './layout/AppButton.vue';
 
 export default {
@@ -57,8 +55,7 @@ export default {
     settings: Object
   },
   components: {
-    PostCard,
-    PostList,
+    Post,
     AppButton
   },
   methods: {

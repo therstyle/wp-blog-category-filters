@@ -146,6 +146,14 @@
   display: inline-block;
 }
 
+.eight29-post-list {
+  figure {
+    img {
+      max-width: 200px;
+    }
+  }
+}
+
 @media only screen and (min-width: 992px) {
   .eight29-app {
     display: grid;

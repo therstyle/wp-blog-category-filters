@@ -45,7 +45,6 @@ export default {
   },
   data() {
     return {
-      test: 'something',
       categories: [],
       posts: [],
       currentCategory: 'uncategorized',
@@ -55,6 +54,9 @@ export default {
       currentCategoryIds: [1],
       results: 0,
       loading: false,
+      postData: {
+
+      },
       settings: {
         postsPerPage: parseInt(wp.post_per_page),
         postsPerRow: parseInt(wp.post_per_row),

@@ -1,5 +1,5 @@
 <template>
-  <article class="eight29-post eight29-post-card">
+  <article class="eight29-post" :class="{'eight29-post-card' : settings.postStyle === 'PostCard', 'eight29-post-list' : settings.postStyle === 'PostList'}">
     <a :href="post.link" v-if="post._embedded['wp:featuredmedia'] && settings.displayFeaturedImage">
       <FeaturedImage 
         :image="post._embedded['wp:featuredmedia']"
@@ -29,11 +29,11 @@
 </template>
 
 <script>
-import FeaturedImage from '../FeaturedImage.vue';
-import Selection from '../../mixins/Selection';
+import FeaturedImage from './FeaturedImage.vue';
+import Selection from '../mixins/Selection';
 
 export default {
-  name: 'PostCard',
+  name: 'Post',
   computed: {
     theExcerpt() {
       const content = this.post.excerpt.rendered;
