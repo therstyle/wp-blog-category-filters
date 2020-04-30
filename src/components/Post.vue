@@ -1,6 +1,6 @@
 <template>
   <article class="eight29-post" :class="{'eight29-post-card' : settings.postStyle === 'PostCard', 'eight29-post-list' : settings.postStyle === 'PostList'}">
-    <a :href="post.link" v-if="post._embedded['wp:featuredmedia'] && settings.displayFeaturedImage">
+    <a  v-if="post._embedded['wp:featuredmedia'] && settings.displayFeaturedImage" :href="post.link" class="eight29-featured-image">
       <FeaturedImage 
         :image="post._embedded['wp:featuredmedia']"
         :srcset="post.featured_image_srcset"

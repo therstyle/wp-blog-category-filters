@@ -1,5 +1,5 @@
 <template>
-  <section class="eight29-post eight29-posts-container">
+  <section class="eight29-posts-container">
     <div v-if="posts && posts.length > 0" class="eight29-posts">
       <Post
         v-for="post in posts"

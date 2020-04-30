@@ -1,5 +1,5 @@
 <template>
-  <figure class="featured-image">
+  <figure>
     <img :src="image[0].media_details.sizes[settings.displayFeaturedImageSize].source_url" :srcset="srcset" :alt="image[0].title.rendered">
   </figure>
 </template>
