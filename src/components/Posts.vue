@@ -41,11 +41,6 @@ import AppButton from './layout/AppButton.vue';
 
 export default {
   name: 'Posts',
-  // data() {
-  //   return {
-  //     currentPageDisplayed: 0
-  //   }
-  // },
   computed: {
     currentPageDisplayed: {
       get(value) {
