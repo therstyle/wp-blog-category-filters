@@ -1,10 +1,11 @@
 <template>
-  <div class="eight29-app" :class="{'no-sidebar' : !displaySideBar}" ref="root">
-    <sidebar v-if="displaySideBar" 
+  <div class="eight29-app" :class="{'no-sidebar' : !settings.displaySideBar}" ref="root">
+    <sidebar v-if="settings.displaySideBar" 
       :categories="categories"
       :currentCategory="currentCategory"
       :currentCategoryIds="currentCategoryIds"
       :results="results"
+      :settings="settings"
       v-on:updateCurrentSelection="updateCurrent"
       v-on:update="updateSelected"
       v-on:reset="resetSelected"
@@ -13,15 +14,10 @@
     <posts ref="posts_root"
       :posts="posts"
       :currentPage="currentPage"
+      :currentCategoryIds="currentCategoryIds"
       :maxPages="maxPages"
       :results="results"
-      :postStyle="postStyle"
-      :displayFeaturedImage="displayFeaturedImage"
-      :displayFeaturedImageSize="displayFeaturedImageSize"
-      :displayAuthor="displayAuthor"
-      :displayDate="displayDate"
-      :displayCategories="displayCategories"
-      :currentCategoryIds="currentCategoryIds"
+      :settings="settings"
       :style="postsCssVars"
       v-on:updateCurrentSelection="updateCurrent"
       v-on:update="updateSelected"
@@ -43,7 +39,7 @@ export default {
   computed: {
     postsCssVars() {
       return {
-        '--posts-per-row': this.postsPerRow
+        '--posts-per-row': this.settings.postsPerRow
       }
     }
   },
@@ -55,19 +51,21 @@ export default {
       currentCategory: 'uncategorized',
       currentId: 1,
       currentPage: 1,
-      postsPerPage: parseInt(wp.post_per_page),
-      postsPerRow: parseInt(wp.post_per_row),
-      postStyle: wp.post_style ? wp.post_style : 'PostCard',
-      displayFeaturedImage: wp.display_featured_image === '1' ? true : false,
-      displayFeaturedImageSize: wp.display_featured_image_size ? wp.display_featured_image_size : 'medium',
-      displaySideBar: wp.display_sidebar === '1' ? true : false,
-      displayAuthor: wp.display_author === '1' ? true : false,
-      displayDate: wp.display_date === '1' ? true : false,
-      displayCategories: wp.display_categories === '1' ? true : false,
       maxPages: 1,
       currentCategoryIds: [1],
       results: 0,
-      loading: false
+      loading: false,
+      settings: {
+        postsPerPage: parseInt(wp.post_per_page),
+        postsPerRow: parseInt(wp.post_per_row),
+        postStyle: wp.post_style ? wp.post_style : 'PostCard',
+        displayFeaturedImage: wp.display_featured_image === '1' ? true : false,
+        displayFeaturedImageSize: wp.display_featured_image_size ? wp.display_featured_image_size : 'medium',
+        displaySideBar: wp.display_sidebar === '1' ? true : false,
+        displayAuthor: wp.display_author === '1' ? true : false,
+        displayDate: wp.display_date === '1' ? true : false,
+        displayCategories: wp.display_categories === '1' ? true : false,
+      },
     }
   },
   name: 'App',
@@ -83,7 +81,7 @@ export default {
     },
     loadPosts: async function() {
       this.loading = true;
-      const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?categories=${this.currentCategoryIds}&page=${this.currentPage}&per_page=${this.postsPerPage}&_embed`);
+      const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?categories=${this.currentCategoryIds}&page=${this.currentPage}&per_page=${this.settings.postsPerPage}&_embed`);
       const data = await response.json();
       this.posts = data;
       this.maxPages = parseInt(response.headers.get('X-WP-TotalPages'));

@@ -4,14 +4,10 @@
       <component
         v-for="post in posts"
         :key="post.id" 
-        :is="postStyle"
+        :is="settings.postStyle"
         :post="post"
-        :displayFeaturedImage="displayFeaturedImage"
-        :displayFeaturedImageSize="displayFeaturedImageSize"
-        :displayAuthor="displayAuthor"
-        :displayDate="displayDate"
-        :displayCategories="displayCategories"
         :currentCategoryIds="currentCategoryIds"
+        :settings="settings"
         v-on:updateCurrentSelection="updateCurrentSelection"
         v-on:update="updateSelected"
         v-on:replaceCurrentSelection="replaceCurrentSelection"
@@ -57,13 +53,8 @@ export default {
     currentPage: Number,
     maxPages: Number,
     results: Number,
-    postStyle: String,
     currentCategoryIds: Array,
-    displayFeaturedImage: Boolean,
-    displayFeaturedImageSize: String,
-    displayAuthor: Boolean,
-    displayDate: Boolean,
-    displayCategories: Boolean
+    settings: Object
   },
   components: {
     PostCard,

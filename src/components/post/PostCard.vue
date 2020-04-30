@@ -1,20 +1,20 @@
 <template>
   <article class="eight29-post eight29-post-card">
-    <a :href="post.link" v-if="post._embedded['wp:featuredmedia'] && displayFeaturedImage">
+    <a :href="post.link" v-if="post._embedded['wp:featuredmedia'] && settings.displayFeaturedImage">
       <FeaturedImage 
         :image="post._embedded['wp:featuredmedia']"
         :srcset="post.featured_image_srcset"
-        :displayFeaturedImageSize="displayFeaturedImageSize"
+        :settings="settings"
       ></FeaturedImage>
     </a>
 
     <div class="eight29-post-body">
-      <div v-if="displayDate || displayAuthor" class="eight29-post-detail">
-        <time v-if="displayDate">{{post.formatted_date}}</time>
-        <span v-if="displayAuthor" class="author">{{ post._embedded.author[0].name }}</span>
+      <div v-if="settings.displayDate || settings.displayAuthor" class="eight29-post-detail">
+        <time v-if="settings.displayDate">{{post.formatted_date}}</time>
+        <span v-if="settings.displayAuthor" class="author">{{ post._embedded.author[0].name }}</span>
       </div>
       <h4 class="eight29-post-title"><a :href="post.link" v-html="post.title.rendered"></a></h4>
-      <div v-if="displayCategories" class="eight29-post-categories">
+      <div v-if="settings.displayCategories" class="eight29-post-categories">
         <a 
           v-for="category in post._embedded['wp:term'][0]" 
           :key="category.id"
@@ -42,12 +42,8 @@ export default {
   },
   props: {
     post: Object,
-    displayFeaturedImage: Boolean,
-    displayFeaturedImageSize: String,
-    displayAuthor: Boolean,
-    displayDate: Boolean,
-    displayCategories: Boolean,
     currentCategoryIds: Array,
+    settings: Object
   },
   components: {
     FeaturedImage

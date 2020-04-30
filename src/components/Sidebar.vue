@@ -58,7 +58,8 @@ export default {
     categories: Array,
     currentCategory: String,
     currentCategoryIds: Array,
-    results: Number
+    results: Number,
+    settings: Object
   },
   mixins: [Selection],
   methods: {
