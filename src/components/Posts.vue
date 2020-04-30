@@ -41,9 +41,26 @@ import AppButton from './layout/AppButton.vue';
 
 export default {
   name: 'Posts',
-  data() {
-    return {
-      currentPageDisplayed: 0
+  // data() {
+  //   return {
+  //     currentPageDisplayed: 0
+  //   }
+  // },
+  computed: {
+    currentPageDisplayed: {
+      get(value) {
+        return this.postData.currentPage;
+      },
+      set(value) {
+        if (value > this.postData.maxPages) {
+          value = this.postData.maxPages;
+        }
+        else if (value < 1) {
+          value = 1;
+        }
+
+        return value;
+      }
     }
   },
   props: {
@@ -81,13 +98,6 @@ export default {
     },
     checkValidPageNumber() {
       console.log('checking page');
-      if (this.currentPageDisplayed > this.postData.maxPages) {
-        this.currentPageDisplayed = this.postData.maxPages;
-      }
-      else if (this.currentPageDisplayed < 1) {
-        this.currentPageDisplayed = 1;
-      }
-
       this.$emit('pageUpdate', parseInt(this.currentPageDisplayed));
     }
   },

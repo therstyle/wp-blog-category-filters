@@ -96,6 +96,7 @@ export default {
     },
     resetSelected() {
       this.postData.currentCategoryIds = [];
+      this.postData.currentPage = 1;
       this.loadPosts();
     },
     addToSelected(id) {
@@ -103,6 +104,7 @@ export default {
 
       if (!this.postData.currentCategoryIds.includes(id)) {
         this.postData.currentCategoryIds = [...this.postData.currentCategoryIds, id];
+        this.postData.currentPage = 1;
       }
   
       console.log(this.postData.currentCategoryIds);
@@ -114,6 +116,8 @@ export default {
       selectedCategories = selectedCategories.filter(categoryId => categoryId !== id);
 
       this.postData.currentCategoryIds = selectedCategories;
+      this.postData.currentPage = 1;
+
       this.loadPosts();
     },
     updateSelected(id) {
@@ -178,6 +182,7 @@ export default {
       });
 
       this.postData.currentCategoryIds = ids;
+      this.postData.currentPage = 1;
       this.loadPosts();
     },
     updateCurrent(object) {
