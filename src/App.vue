@@ -40,7 +40,7 @@ export default {
         return `categories=${this.postData.currentCategoryIds}&`;
       }
       else {
-        return null;
+        return '';
       }
     }
   },

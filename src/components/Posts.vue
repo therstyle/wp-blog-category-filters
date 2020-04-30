@@ -92,7 +92,7 @@ export default {
     }
   },
   mounted() {
-    this.currentPageDisplayed = this.currentPage;
+    this.currentPageDisplayed = this.postData.currentPage;
   }
 }
 </script>
