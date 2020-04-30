@@ -27,6 +27,7 @@ class eight29_filters {
       add_option('eight29_author', 'true');
       add_option('eight29_date', 'true');
       add_option('eight29_categories', 'true');
+      add_option('eight29_post_counts', 'false');
     });
   }
 
@@ -48,7 +49,8 @@ class eight29_filters {
         'display_sidebar' =>  get_option('eight29_sidebar') === 'true' ? true : false,
         'display_author' =>  get_option('eight29_author') === 'true' ? true : false,
         'display_date' =>  get_option('eight29_date') === 'true' ? true : false,
-        'display_categories' =>  get_option('eight29_categories') === 'true' ? true : false
+        'display_categories' =>  get_option('eight29_categories') === 'true' ? true : false,
+        'display_post_counts' =>  get_option('eight29_post_counts') === 'true' ? true : false
       ];
 
       wp_localize_script('eight29_assets', 'wp', $params);
@@ -177,6 +179,7 @@ class eight29_filters {
     add_action( 'admin_init', function() {
       //Register Settings
       register_setting('eight29_settings', 'eight29_sidebar');
+      register_setting('eight29_settings', 'eight29_post_counts');
       register_setting('eight29_settings', 'eight29_post_per_page');
       register_setting('eight29_settings', 'eight29_post_per_row');
       register_setting('eight29_settings', 'eight29_post_style');
@@ -191,6 +194,7 @@ class eight29_filters {
 
       //Settings Fields
       add_settings_field( 'eight29_sidebar', 'Display Categories Sidebar?', 'eight29_sidebar', 'eight29_settings', 'eight29_post_settings_section' );
+      add_settings_field( 'eight29_post_counts', 'Display Post Counts?', 'eight29_post_counts', 'eight29_settings', 'eight29_post_settings_section' );
       add_settings_field( 'eight29_post_per_page', 'Posts Per Page', 'eight29_post_per_page', 'eight29_settings', 'eight29_post_settings_section' );
       add_settings_field( 'eight29_post_per_row', 'Posts Per Row', 'eight29_post_per_row', 'eight29_settings', 'eight29_post_settings_section' );
       add_settings_field( 'eight29_post_style', 'Post Style', 'eight29_post_style', 'eight29_settings', 'eight29_post_settings_section' );
@@ -208,6 +212,14 @@ class eight29_filters {
     function eight29_sidebar() {
       $value = get_option('eight29_sidebar');
       echo '<select name="eight29_sidebar" id="eight29_sidebar">
+      <option value="true" '.($value === 'true' ? 'selected="selected"' : null).'>Yes</option>
+      <option value="false" '.($value === 'false' ? 'selected="selected"' : null).'>No</option>
+      </select>';
+    }
+
+    function eight29_post_counts() {
+      $value = get_option('eight29_post_counts');
+      echo '<select name="eight29_post_counts" id="eight29_post_counts">
       <option value="true" '.($value === 'true' ? 'selected="selected"' : null).'>Yes</option>
       <option value="false" '.($value === 'false' ? 'selected="selected"' : null).'>No</option>
       </select>';

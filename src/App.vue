@@ -65,6 +65,7 @@ export default {
         displayAuthor: wp.display_author === '1' ? true : false,
         displayDate: wp.display_date === '1' ? true : false,
         displayCategories: wp.display_categories === '1' ? true : false,
+        displayPostCounts: wp.display_post_counts === '1' ? true : false
       },
     }
   },

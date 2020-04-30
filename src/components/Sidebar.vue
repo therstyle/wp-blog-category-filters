@@ -23,7 +23,9 @@
               :checked="currentCategoryIds.includes(category.id)"
               v-on:change="updateCurrentSelection({category: category.slug, id: category.id, children: category.children, selected: currentCategoryIds.includes(category.id)})"
             >
-            <label :for="category.slug">{{ category.name }}</label>
+            <label :for="category.slug">{{ category.name }} 
+              <span v-if="settings.displayPostCounts" class="eight29-category-count">({{ category.count }})</span>
+            </label>
           </div>
 
           <ul v-if="category.children" class="eight29-category-children">
@@ -35,7 +37,9 @@
                   :checked="currentCategoryIds.includes(child.id)"
                   v-on:change="updateCurrentSelection({category: child.slug, id: child.id, selected: currentCategoryIds.includes(child.id)})"
                 >
-                <label :for="child.slug">{{ child.name }}</label>
+                <label :for="child.slug">{{ child.name }}
+                  <span v-if="settings.displayPostCounts" class="eight29-category-count">({{ child.count }})</span>
+                </label>
               </div>
             </li>
           </ul>
