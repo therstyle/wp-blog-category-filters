@@ -12,3 +12,8 @@ npm start
 ```
 npm build
 ```
+
+### To display the blog archive and filters use this shortcode
+```
+[eight29_filters]
+```
