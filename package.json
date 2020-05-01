@@ -26,7 +26,7 @@
   },
   "scripts": {
     "start": "parcel watch src/main.js src/assets/css/style.scss",
-    "build": "parcel build src/main/js src/assets/css/style.scss",
+    "build": "parcel build src/main.js src/assets/css/style.scss",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
