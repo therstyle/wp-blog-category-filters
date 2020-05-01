@@ -1,10 +1,7 @@
 <template>
   <div class="eight29-app" :class="{'no-sidebar' : !settings.displaySideBar}" ref="root">
     <sidebar v-if="settings.displaySideBar" 
-      :categories="categories"
-      :currentCategory="currentCategory"
-      :currentCategoryIds="currentCategoryIds"
-      :results="results"
+      :postData="postData"
       :settings="settings"
       v-on:updateCurrentSelection="updateCurrent"
       v-on:update="updateSelected"
@@ -12,11 +9,7 @@
     ></sidebar>
 
     <posts ref="posts_root"
-      :posts="posts"
-      :currentPage="currentPage"
-      :currentCategoryIds="currentCategoryIds"
-      :maxPages="maxPages"
-      :results="results"
+      :postData="postData"
       :settings="settings"
       :style="postsCssVars"
       v-on:updateCurrentSelection="updateCurrent"
@@ -41,21 +34,28 @@ export default {
       return {
         '--posts-per-row': this.settings.postsPerRow
       }
+    },
+    categoryParamter() {
+      if(this.postData.currentCategoryIds.length !== 0) {
+        return `categories=${this.postData.currentCategoryIds}&`;
+      }
+      else {
+        return '';
+      }
     }
   },
   data() {
     return {
-      categories: [],
-      posts: [],
-      currentCategory: 'uncategorized',
-      currentId: 1,
-      currentPage: 1,
-      maxPages: 1,
-      currentCategoryIds: [1],
-      results: 0,
-      loading: false,
       postData: {
-
+        categories: [],
+        posts: [],
+        currentCategory: 'uncategorized',
+        currentId: 1,
+        currentPage: 1,
+        maxPages: 1,
+        currentCategoryIds: [],
+        results: 0,
+        loading: false,
       },
       settings: {
         postsPerPage: parseInt(wp.post_per_page),
@@ -80,46 +80,53 @@ export default {
     loadCats: async function() {
       const response = await fetch(`${wp.home_url}/wp-json/eight29/v1/categories`);
       const data = await response.json();
-      this.categories = data;
+      this.postData.categories = data;
     },
     loadPosts: async function() {
-      this.loading = true;
-      const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?categories=${this.currentCategoryIds}&page=${this.currentPage}&per_page=${this.settings.postsPerPage}&_embed`);
+      this.postData.loading = true;
+  
+      console.log(`${wp.home_url}/wp-json/wp/v2/posts?${this.categoryParamter}page=${this.postData.currentPage}&per_page=${this.settings.postsPerPage}&_embed`);
+
+      const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?${this.categoryParamter}page=${this.postData.currentPage}&per_page=${this.settings.postsPerPage}&_embed`);
       const data = await response.json();
-      this.posts = data;
-      this.maxPages = parseInt(response.headers.get('X-WP-TotalPages'));
-      this.results = parseInt(response.headers.get('X-WP-Total'));
-      this.loading = false;
+      this.postData.posts = data;
+      this.postData.maxPages = parseInt(response.headers.get('X-WP-TotalPages'));
+      this.postData.results = parseInt(response.headers.get('X-WP-Total'));
+      this.postData.loading = false;
+      this.setLocalStorage();
     },
     resetSelected() {
-      this.currentCategoryIds = [1];
+      this.postData.currentCategoryIds = [];
+      this.postData.currentPage = 1;
       this.loadPosts();
     },
     addToSelected(id) {
       console.log('addToSelected');
 
-      if (!this.currentCategoryIds.includes(id)) {
-        this.currentCategoryIds = [...this.currentCategoryIds, id];
+      if (!this.postData.currentCategoryIds.includes(id)) {
+        this.postData.currentCategoryIds = [...this.postData.currentCategoryIds, id];
+        this.postData.currentPage = 1;
       }
   
-      console.log(this.currentCategoryIds);
+      console.log(this.postData.currentCategoryIds);
       this.loadPosts();
     },
     removeFromSelected(id) {
       console.log('removeFromSelected');
-      let selectedCategories = [...this.currentCategoryIds];
+      let selectedCategories = [...this.postData.currentCategoryIds];
       selectedCategories = selectedCategories.filter(categoryId => categoryId !== id);
 
-      this.currentCategoryIds = selectedCategories.length === 0 ? this.currentCategoryIds = [0] : selectedCategories;
+      this.postData.currentCategoryIds = selectedCategories;
+      this.postData.currentPage = 1;
 
       this.loadPosts();
     },
     updateSelected(id) {
       console.log('replaceSelected');
 
-      if (this.currentCategoryIds.includes(id)) {
+      if (this.postData.currentCategoryIds.includes(id)) {
         console.log('remove from array');
-        this.categories.forEach(category => {
+        this.postData.categories.forEach(category => {
           if (category.id === id) {
             this.removeFromSelected(category.id);
 
@@ -132,7 +139,7 @@ export default {
             if (category.parent !== 0) {
               const childIds = [];
               
-              this.categories.forEach(category => { //search for children remove top level parent from selected
+              this.postData.categories.forEach(category => { //search for children remove top level parent from selected
                 if (category.children) {
                   category.children.forEach(child => {
                     childIds.push(child.id);
@@ -149,7 +156,7 @@ export default {
       }
       else {
         console.log('add to array');
-        this.categories.forEach(category => {
+        this.postData.categories.forEach(category => {
           if (category.id === id) {
             this.addToSelected(id);
 
@@ -167,42 +174,69 @@ export default {
       const ids = [];
       ids.push(id);
 
-      this.categories.forEach(category => {
+      this.postData.categories.forEach(category => {
         if (category.id === id && category.children) {
           category.children.forEach(child => {
             ids.push(child.id);
           })
         }
-      })
+      });
 
-      this.currentCategoryIds = ids;
+      this.postData.currentCategoryIds = ids;
+      this.postData.currentPage = 1;
       this.loadPosts();
     },
     updateCurrent(object) {
-      this.currentCategory = object.category;
-      this.currentId = object.id;
+      this.postData.currentCategory = object.category;
+      this.postData.currentId = object.id;
 
       console.log('current IDs')
-      console.log(this.currentCategoryIds);
+      console.log(this.postData.currentCategoryIds);
+    },
+    setLocalStorage() {
+      const selected = JSON.stringify(this.postData.currentCategoryIds);
+      localStorage.setItem('selected', selected);
+    },
+    getLocalStorage() {
+      const selected = JSON.parse(localStorage.getItem('selected'));
+      return selected;
     },
     pagePrev() {
-      if (!this.currentPage <= 1) {
-        this.currentPage--;
+      if (!this.postData.currentPage <= 1) {
+        this.postData.currentPage--;
         this.loadPosts();
         this.scrollUp();
       }
     },
     pageNext() {
-      if (!(this.currentPage >= this.maxPages)){
-        this.currentPage++;
+      if (!(this.postData.currentPage >= this.postData.maxPages)){
+        this.postData.currentPage++;
         this.loadPosts();
         this.scrollUp();
       }
     },
     pageUpdate(pageNumber) {
-      this.currentPage = pageNumber;
-      this.loadPosts();
-      this.scrollUp();
+      const currentPage = this.postData.currentPage;
+      pageNumber = parseInt(pageNumber);
+
+      if (pageNumber > this.postData.maxPages) { //too large
+        this.postData.currentPage = this.postData.maxPages;
+        this.loadPosts();
+        this.scrollUp();
+      }
+      else if (pageNumber < 1) { //too small
+        this.postData.currentPage = 1;
+        this.loadPosts();
+        this.scrollUp();
+      }
+      else if (isNaN(pageNumber) || pageNumber === undefined || pageNumber === '') { // not a number
+        this.postData.currentPage = currentPage;
+      }
+      else { // data passed checks
+        this.postData.currentPage = pageNumber;
+        this.loadPosts();
+        this.scrollUp();
+      }
     },
     scrollUp() {
       window.scroll({
@@ -213,6 +247,10 @@ export default {
     },
   },
   mounted() {
+    if (this.getLocalStorage().length > 0) {
+      this.postData.currentCategoryIds = this.getLocalStorage();
+    }
+    
     this.loadCats();
     this.loadPosts();
   }

@@ -1,11 +1,11 @@
 <template>
   <section class="eight29-posts-container">
-    <div v-if="posts && posts.length > 0" class="eight29-posts">
+    <div v-if="postData.posts && postData.posts.length > 0" class="eight29-posts">
       <Post
-        v-for="post in posts"
+        v-for="post in postData.posts"
         :key="post.id"
         :post="post"
-        :currentCategoryIds="currentCategoryIds"
+        :currentCategoryIds="postData.currentCategoryIds"
         :settings="settings"
         v-on:updateCurrentSelection="updateCurrentSelection"
         v-on:update="updateSelected"
@@ -14,18 +14,18 @@
       ></Post>
     </div>
 
-    <ul v-if="posts && posts.length > 0" class="eight29-pagination">
+    <ul v-if="postData.posts && postData.posts.length > 0" class="eight29-pagination">
       <li class="eight29-pagination-prev">
-        <AppButton v-on:clickEvent="pagePrev" :disabled="currentPage <= 1">Previous</AppButton>
+        <AppButton v-on:clickEvent="pagePrev" :disabled="postData.currentPage <= 1">Previous</AppButton>
       </li>
 
       <li class="eight29-pagination-current">
-        <input class="eight29-current-page" v-on:change="checkValidPageNumber" type="number" v-model="currentPageDisplayed" :max="maxPages">
-        <span>/ {{ maxPages }}</span>
+        <input ref="pageInput" class="eight29-current-page" v-on:click="selectText(currentPageDisplayed)" type="number" v-model="currentPageDisplayed" :max="postData.maxPages">
+        <span>/ {{ postData.maxPages }}</span>
       </li>
 
       <li class="eight29-pagination-next">
-        <AppButton v-on:clickEvent="pageNext" :disabled="currentPage >= maxPages">Next</AppButton>
+        <AppButton v-on:clickEvent="pageNext" :disabled="postData.currentPage >= postData.maxPages">Next</AppButton>
       </li>
     </ul>
 
@@ -41,17 +41,19 @@ import AppButton from './layout/AppButton.vue';
 
 export default {
   name: 'Posts',
-  data() {
-    return {
-      currentPageDisplayed: 0
+  computed: {
+    currentPageDisplayed: {
+      get() {
+        return this.postData.currentPage;
+      },
+      set(value) {
+        this.$emit('pageUpdate', parseInt(value));
+        return value;
+      }
     }
   },
   props: {
-    posts: Array,
-    currentPage: Number,
-    maxPages: Number,
-    results: Number,
-    currentCategoryIds: Array,
+    postData: Object,
     settings: Object
   },
   components: {
@@ -83,20 +85,9 @@ export default {
     replaceSelected(id) {
       this.$emit('replace', id);
     },
-    checkValidPageNumber() {
-      console.log('checking page');
-      if (this.currentPageDisplayed > this.maxPages) {
-        this.currentPageDisplayed = this.maxPages;
-      }
-      else if (this.currentPageDisplayed < 1) {
-        this.currentPageDisplayed = 1;
-      }
-
-      this.$emit('pageUpdate', parseInt(this.currentPageDisplayed));
+    selectText(value) {
+      this.$refs.pageInput.select();
     }
-  },
-  mounted() {
-    this.currentPageDisplayed = this.currentPage;
   }
 }
 </script>
