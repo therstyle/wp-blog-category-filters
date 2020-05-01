@@ -84,7 +84,7 @@ export default {
     },
     loadPosts: async function() {
       this.postData.loading = true;
-      
+  
       console.log(`${wp.home_url}/wp-json/wp/v2/posts?${this.categoryParamter}page=${this.postData.currentPage}&per_page=${this.settings.postsPerPage}&_embed`);
 
       const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?${this.categoryParamter}page=${this.postData.currentPage}&per_page=${this.settings.postsPerPage}&_embed`);
@@ -93,6 +93,7 @@ export default {
       this.postData.maxPages = parseInt(response.headers.get('X-WP-TotalPages'));
       this.postData.results = parseInt(response.headers.get('X-WP-Total'));
       this.postData.loading = false;
+      this.setLocalStorage();
     },
     resetSelected() {
       this.postData.currentCategoryIds = [];
@@ -192,6 +193,14 @@ export default {
       console.log('current IDs')
       console.log(this.postData.currentCategoryIds);
     },
+    setLocalStorage() {
+      const selected = JSON.stringify(this.postData.currentCategoryIds);
+      localStorage.setItem('selected', selected);
+    },
+    getLocalStorage() {
+      const selected = JSON.parse(localStorage.getItem('selected'));
+      return selected;
+    },
     pagePrev() {
       if (!this.postData.currentPage <= 1) {
         this.postData.currentPage--;
@@ -227,7 +236,6 @@ export default {
         this.postData.currentPage = pageNumber;
         this.loadPosts();
         this.scrollUp();
-        console.log('A ok!');
       }
     },
     scrollUp() {
@@ -239,6 +247,10 @@ export default {
     },
   },
   mounted() {
+    if (this.getLocalStorage().length > 0) {
+      this.postData.currentCategoryIds = this.getLocalStorage();
+    }
+    
     this.loadCats();
     this.loadPosts();
   }
