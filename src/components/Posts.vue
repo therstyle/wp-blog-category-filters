@@ -20,7 +20,7 @@
       </li>
 
       <li class="eight29-pagination-current">
-        <input class="eight29-current-page" v-on:change="checkValidPageNumber" type="number" v-model="currentPageDisplayed" :max="postData.maxPages">
+        <input ref="pageInput" class="eight29-current-page" v-on:click="selectText(currentPageDisplayed)" type="number" v-model="currentPageDisplayed" :max="postData.maxPages">
         <span>/ {{ postData.maxPages }}</span>
       </li>
 
@@ -43,17 +43,11 @@ export default {
   name: 'Posts',
   computed: {
     currentPageDisplayed: {
-      get(value) {
+      get() {
         return this.postData.currentPage;
       },
       set(value) {
-        if (value > this.postData.maxPages) {
-          value = this.postData.maxPages;
-        }
-        else if (value < 1) {
-          value = 1;
-        }
-
+        this.$emit('pageUpdate', parseInt(value));
         return value;
       }
     }
@@ -91,13 +85,9 @@ export default {
     replaceSelected(id) {
       this.$emit('replace', id);
     },
-    checkValidPageNumber() {
-      console.log('checking page');
-      this.$emit('pageUpdate', parseInt(this.currentPageDisplayed));
+    selectText(value) {
+      this.$refs.pageInput.select();
     }
-  },
-  mounted() {
-    this.currentPageDisplayed = this.postData.currentPage;
   }
 }
 </script>

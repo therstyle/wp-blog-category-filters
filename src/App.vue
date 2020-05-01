@@ -207,9 +207,28 @@ export default {
       }
     },
     pageUpdate(pageNumber) {
-      this.postData.currentPage = pageNumber;
-      this.loadPosts();
-      this.scrollUp();
+      const currentPage = this.postData.currentPage;
+      pageNumber = parseInt(pageNumber);
+
+      if (pageNumber > this.postData.maxPages) { //too large
+        this.postData.currentPage = this.postData.maxPages;
+        this.loadPosts();
+        this.scrollUp();
+      }
+      else if (pageNumber < 1) { //too small
+        this.postData.currentPage = 1;
+        this.loadPosts();
+        this.scrollUp();
+      }
+      else if (isNaN(pageNumber) || pageNumber === undefined || pageNumber === '') { // not a number
+        this.postData.currentPage = currentPage;
+      }
+      else { // data passed checks
+        this.postData.currentPage = pageNumber;
+        this.loadPosts();
+        this.scrollUp();
+        console.log('A ok!');
+      }
     },
     scrollUp() {
       window.scroll({
