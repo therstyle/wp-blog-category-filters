@@ -247,7 +247,7 @@ export default {
     },
   },
   mounted() {
-    if (this.getLocalStorage().length > 0) {
+    if (this.getLocalStorage()) {
       this.postData.currentCategoryIds = this.getLocalStorage();
     }
     
