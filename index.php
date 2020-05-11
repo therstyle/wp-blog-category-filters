@@ -11,7 +11,7 @@ defined('ABSPATH') or die();
 **/
 
 class eight29_filters {
-  public function plugin_activated() {
+  public static function plugin_activated() {
     function activation() {
       do_action( 'eight29_filters_default_options' );
     }
@@ -31,7 +31,7 @@ class eight29_filters {
     });
   }
 
-  public function load_assets() { //Enqueue Scripts & Styles
+  public static function load_assets() { //Enqueue Scripts & Styles
     add_action('wp_enqueue_scripts', function() {
       wp_enqueue_style('eight29_style', plugin_dir_url(__FILE__).'/dist/assets/css/style.css', null, '1.0');
       wp_enqueue_script('eight29_assets', plugin_dir_url(__FILE__).'/dist/main.js', null, '1.0', true);
@@ -57,7 +57,7 @@ class eight29_filters {
     });
   }
 
-  public function register_shortcode() {
+  public static function register_shortcode() {
     add_shortcode('eight29_filters', function() {
       $code = '<div class="eight29-filters"></div>';
       return $code;
@@ -149,7 +149,7 @@ class eight29_filters {
     });
   }
 
-  public function options_page() {
+  public static function options_page() {
     add_action( 'admin_menu', function() {
       $page_title = '829 Blog & Category Filters Settings';
       $menu_title = '829 Blog & Category Filters';
@@ -286,15 +286,14 @@ class eight29_filters {
     }
   }
 
-  public function init() {
-    $this->plugin_activated();
-    $this->load_assets();
-    $this->register_shortcode();
-    $this->endpoints();
-    $this->options_page();
+  public static function init() {
+    self::plugin_activated();
+    self::load_assets();
+    self::register_shortcode();
+    self::endpoints();
+    self::options_page();
   }
 }
 
-$eight29_filters = new eight29_filters();
-$eight29_filters->init();
+eight29_filters::init();
 ?>
