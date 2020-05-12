@@ -76,8 +76,6 @@ class eight29_filters {
 
       if ($children) {
         foreach ($children as $child) {
-          get_cat_children($child->taxonomy, $child->term_id);
-
           array_push($child_data, [
             'id' => $child->term_id,
             'description' => $child->description,
@@ -86,7 +84,7 @@ class eight29_filters {
             'taxonomy' => $child->taxonomy,
             'parent' => $child->parent,
             'count' => $child->count,
-            'children' => $child_data
+            'children' => get_cat_children($child->taxonomy, $child->term_id)
           ]);
         }
       }
@@ -100,31 +98,8 @@ class eight29_filters {
         'hide_empty' => false
       ];
       $categories = get_categories($args);
-      $level = 0;
       
       foreach($categories as $category) {
-        // $child_data = [];
-
-        // $children = get_terms([
-        //   'hide_empty' => false,
-        //   'taxonomy' => $category->taxonomy,
-        //   'child_of' => $category->term_id
-        // ]);
-
-        // foreach ($children as $child) {
-        //   array_push($child_data, [
-        //     'id' => $child->term_id,
-        //     'description' => $child->description,
-        //     'name' => $child->name,
-        //     'slug' => $child->slug,
-        //     'taxonomy' => $child->taxonomy,
-        //     'parent' => $child->parent,
-        //     'count' => $child->count,
-        //   ]);
-        // }
-
-        //$child = count($child_data) !== 0 ? $child_data : false;
-
         array_push($data, [
           'id' => $category->term_id,
           'description' => $category->description,
