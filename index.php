@@ -11,6 +11,125 @@ defined('ABSPATH') or die();
 **/
 
 class eight29_filters {
+  public static function get_fields() {
+    function get_the_sizes() {
+      $values = [];
+      $sizes = get_intermediate_image_sizes();
+  
+      foreach($sizes as $size) {
+        $values[$size] = $size;
+      }
+      
+      return $values;
+    }
+
+    $fields = [
+      [
+        'id' => 'eight29_sidebar',
+        'type' => 'select',
+        'label' => 'Display Categories Sidebar?',
+        'section' => 'eight29_settings',
+        'default' => 'true',
+        'options' => [
+          'Yes' => 'true',
+          'No' => 'false',
+        ]
+      ],
+      [
+        'id' => 'eight29_post_counts',
+        'type' => 'select',
+        'label' => 'Display Post Counts?',
+        'section' => 'eight29_settings',
+        'default' => 'false',
+        'options' => [
+          'Yes' => 'true',
+          'No' => 'false',
+        ]
+      ],
+      [
+        'id' => 'eight29_post_per_page',
+        'type' => 'number',
+        'label' => 'Posts Per Page',
+        'section' => 'eight29_settings',
+        'default' => '10',
+        'max' => '50'
+      ],
+      [
+        'id' => 'eight29_post_per_row',
+        'type' => 'number',
+        'label' => 'Posts Per Row',
+        'section' => 'eight29_settings',
+        'default' => '1',
+        'max' => '4'
+      ],
+      [
+        'id' => 'eight29_post_style',
+        'type' => 'select',
+        'label' => 'Posts Style',
+        'section' => 'eight29_settings',
+        'default' => 'PostCard',
+        'options' => [
+          'Card' => 'PostCard',
+          'List' => 'PostList'
+        ]
+      ],
+      [
+        'id' => 'eight29_featured_image',
+        'type' => 'select',
+        'label' => 'Display Featured Image?',
+        'section' => 'eight29_settings',
+        'default' => 'true',
+        'options' => [
+          'Yes' => 'true',
+          'No' => 'false',
+        ]
+      ],
+      [
+        'id' => 'eight29_featured_image_size',
+        'type' => 'select',
+        'label' => 'Featured Image Size',
+        'section' => 'eight29_settings',
+        'default' => 'true',
+        'options' => get_the_sizes()
+      ],
+      [
+        'id' => 'eight29_author',
+        'type' => 'select',
+        'label' => 'Display Author Name?',
+        'section' => 'eight29_settings',
+        'default' => 'true',
+        'options' => [
+          'Yes' => 'true',
+          'No' => 'false',
+        ]
+      ],
+      [
+        'id' => 'eight29_date',
+        'type' => 'select',
+        'label' => 'Display Post Date?',
+        'section' => 'eight29_settings',
+        'default' => 'true',
+        'options' => [
+          'Yes' => 'true',
+          'No' => 'false',
+        ]
+      ],
+      [
+        'id' => 'eight29_categories',
+        'type' => 'select',
+        'label' => 'Display Post Categories?',
+        'section' => 'eight29_settings',
+        'default' => 'true',
+        'options' => [
+          'Yes' => 'true',
+          'No' => 'false',
+        ]
+      ]
+    ];
+
+    return $fields;
+  }
+
   public static function plugin_activated() {
     function activation() {
       do_action( 'eight29_filters_default_options' );
@@ -18,16 +137,9 @@ class eight29_filters {
 
     register_activation_hook( __FILE__, 'activation' );
     add_action( 'eight29_filters_default_options', function() {
-      add_option('eight29_post_style', 'PostCard');
-      add_option('eight29_post_per_page', '10');
-      add_option('eight29_post_per_row', '1');
-      add_option('eight29_featured_image', 'true');
-      add_option('eight29_featured_image_size', 'medium');
-      add_option('eight29_sidebar', 'true');
-      add_option('eight29_author', 'true');
-      add_option('eight29_date', 'true');
-      add_option('eight29_categories', 'true');
-      add_option('eight29_post_counts', 'false');
+      foreach(self::get_fields() as $field) {
+        add_option($field['id'], $field['default']);
+      }
     });
   }
 
@@ -182,126 +294,11 @@ class eight29_filters {
     }
 
     add_action( 'admin_init', function() {
-      function get_the_sizes() {
-        $values = [];
-        $sizes = get_intermediate_image_sizes();
-
-        foreach($sizes as $size) {
-          $values[$size] = $size;
-        }
-        
-        return $values;
-      }
-
-      $fields = [
-        [
-          'id' => 'eight29_sidebar',
-          'type' => 'select',
-          'label' => 'Display Categories Sidebar?',
-          'section' => 'eight29_settings',
-          'default' => 'true',
-          'options' => [
-            'Yes' => 'true',
-            'No' => 'false',
-          ]
-        ],
-        [
-          'id' => 'eight29_post_counts',
-          'type' => 'select',
-          'label' => 'Display Post Counts?',
-          'section' => 'eight29_settings',
-          'default' => 'false',
-          'options' => [
-            'Yes' => 'true',
-            'No' => 'false',
-          ]
-        ],
-        [
-          'id' => 'eight29_post_per_page',
-          'type' => 'number',
-          'label' => 'Posts Per Page',
-          'section' => 'eight29_settings',
-          'default' => '10',
-          'max' => '50'
-        ],
-        [
-          'id' => 'eight29_post_per_row',
-          'type' => 'number',
-          'label' => 'Posts Per Row',
-          'section' => 'eight29_settings',
-          'default' => '1',
-          'max' => '4'
-        ],
-        [
-          'id' => 'eight29_post_style',
-          'type' => 'select',
-          'label' => 'Posts Style',
-          'section' => 'eight29_settings',
-          'default' => 'PostCard',
-          'options' => [
-            'Card' => 'PostCard',
-            'List' => 'PostList'
-          ]
-        ],
-        [
-          'id' => 'eight29_featured_image',
-          'type' => 'select',
-          'label' => 'Display Featured Image?',
-          'section' => 'eight29_settings',
-          'default' => 'true',
-          'options' => [
-            'Yes' => 'true',
-            'No' => 'false',
-          ]
-        ],
-        [
-          'id' => 'eight29_featured_image_size',
-          'type' => 'select',
-          'label' => 'Featured Image Size',
-          'section' => 'eight29_settings',
-          'default' => 'true',
-          'options' => get_the_sizes()
-        ],
-        [
-          'id' => 'eight29_author',
-          'type' => 'select',
-          'label' => 'Display Author Name?',
-          'section' => 'eight29_settings',
-          'default' => 'true',
-          'options' => [
-            'Yes' => 'true',
-            'No' => 'false',
-          ]
-        ],
-        [
-          'id' => 'eight29_date',
-          'type' => 'select',
-          'label' => 'Display Post Date?',
-          'section' => 'eight29_settings',
-          'default' => 'true',
-          'options' => [
-            'Yes' => 'true',
-            'No' => 'false',
-          ]
-        ],
-        [
-          'id' => 'eight29_categories',
-          'type' => 'select',
-          'label' => 'Display Post Categories?',
-          'section' => 'eight29_settings',
-          'default' => 'true',
-          'options' => [
-            'Yes' => 'true',
-            'No' => 'false',
-          ]
-        ],
-      ];
-
       //Sections
       add_settings_section('eight29_post_settings_section', 'Post Style Settings', 'eight29_post_settings_section', 'eight29_settings');
 
       //Register & Add Settings
-      foreach ($fields as $field) {
+      foreach (self::get_fields() as $field) {
         register_setting($field['section'], $field['id']);
         add_settings_field($field['id'], $field['label'], 'field_callback', $field['section'], 'eight29_post_settings_section', $field);
       }
