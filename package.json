@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "bestzip": "^2.1.5",
     "browserslist": "^4.12.0",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-clean-dist": "0.0.6",
+    "save-dev": "0.0.1-security",
     "vue": "^2.6.11",
     "vue-hot-reload-api": "^2.3.4"
   },
@@ -27,6 +29,7 @@
   "scripts": {
     "start": "parcel watch src/main.js src/assets/css/style.scss",
     "build": "parcel build src/main.js src/assets/css/style.scss",
+    "zip": "npm run build && bestzip eight29-filters.zip index.php dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
