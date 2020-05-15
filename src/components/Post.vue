@@ -52,7 +52,6 @@ export default {
   methods: {
     clearSearchTerm() {
       this.$emit('clearSearchTerm');
-      console.log('working?');
     }
   }
 }

@@ -63,15 +63,12 @@ export default {
   },
   methods: {
     resetSelected() {
-      console.log('reset');
       this.$emit('reset');
     },
     pagePrev() {
-      console.log('pagePrev');
       this.$emit('pagePrev');
     },
     pageNext() {
-      console.log('pageNext');
       this.$emit('pageNext');
     },
     updateCurrentSelection(object) {
@@ -94,7 +91,6 @@ export default {
     },
     clearSearchTerm() {
       this.$emit('clearSearchTerm');
-      console.log('working 2?');
     }
   }
 }

@@ -25,7 +25,6 @@ export default {
     searchRequest(value) {
       if (this.currentSearchTerm.length > 0) {
         this.$emit('searchRequest', value);
-        console.log('search request');
       }
     }
   }

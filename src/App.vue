@@ -114,18 +114,14 @@ export default {
       this.clearSearchTerm();
     },
     addToSelected(id) {
-      console.log('addToSelected');
-
       if (!this.postData.currentCategoryIds.includes(id)) {
         this.postData.currentCategoryIds = [...this.postData.currentCategoryIds, id];
         this.postData.currentPage = 1;
       }
   
-      console.log(this.postData.currentCategoryIds);
       this.loadPosts();
     },
     removeFromSelected(id) {
-      console.log('removeFromSelected');
       let selectedCategories = [...this.postData.currentCategoryIds];
       selectedCategories = selectedCategories.filter(categoryId => categoryId !== id);
 
@@ -135,11 +131,8 @@ export default {
       this.loadPosts();
     },
     updateSelected(id) {
-      console.log('replaceSelected');
-
       if (this.postData.currentCategoryIds.includes(id)) {
-        console.log('remove from array');
-        this.postData.categories.forEach(category => {
+        this.postData.categories.forEach(category => { //remove from array
           if (category.id === id) {
             this.removeFromSelected(category.id);
 
@@ -168,8 +161,7 @@ export default {
         });
       }
       else {
-        console.log('add to array');
-        this.postData.categories.forEach(category => {
+        this.postData.categories.forEach(category => { //add to array
           if (category.id === id) {
             this.addToSelected(id);
 
@@ -183,7 +175,6 @@ export default {
       }
     },
     replaceSelected(id) {
-      console.log('replaceSelected');
       const ids = [];
       ids.push(id);
 
@@ -202,9 +193,6 @@ export default {
     updateCurrent(object) {
       this.postData.currentCategory = object.category;
       this.postData.currentId = object.id;
-
-      console.log('current IDs')
-      console.log(this.postData.currentCategoryIds);
     },
     setLocalStorage() {
       const selected = JSON.stringify(this.postData.currentCategoryIds);
