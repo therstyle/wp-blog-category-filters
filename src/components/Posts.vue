@@ -11,6 +11,7 @@
         v-on:update="updateSelected"
         v-on:replaceCurrentSelection="replaceCurrentSelection"
         v-on:replace="replaceSelected"
+        v-on:clearSearchTerm="clearSearchTerm"
       ></Post>
     </div>
 
@@ -87,6 +88,13 @@ export default {
     },
     selectText(value) {
       this.$refs.pageInput.select();
+    },
+    searchFieldChange(value) {
+      this.$emit('searchFieldChange', value);
+    },
+    clearSearchTerm() {
+      this.$emit('clearSearchTerm');
+      console.log('working 2?');
     }
   }
 }

@@ -19,7 +19,7 @@
           v-for="category in post._embedded['wp:term'][0]" 
           :key="category.id"
           :data-attribute-selected="currentCategoryIds.includes(category.id)"
-          v-on:click.prevent="replaceCurrentSelection({ category: category.slug, id: category.id, selected: currentCategoryIds.includes(category.id) })"
+          v-on:click.prevent="replaceCurrentSelection({ category: category.slug, id: category.id, selected: currentCategoryIds.includes(category.id) }); clearSearchTerm();"
         >{{ category.name }}</a>
       </div>
 
@@ -48,6 +48,12 @@ export default {
   components: {
     FeaturedImage
   },
-  mixins: [Selection]
+  mixins: [Selection],
+  methods: {
+    clearSearchTerm() {
+      this.$emit('clearSearchTerm');
+      console.log('working?');
+    }
+  }
 }
 </script>
