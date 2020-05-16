@@ -1,5 +1,5 @@
 <template>
-  <form class="eight29-sidebar">
+  <form class="eight29-sidebar" v-on:submit.prevent>
     <ul class="eight29-sidebar-detail">
       <li>
         <span>Posts ({{ postData.results }})</span>
@@ -12,6 +12,12 @@
         </a>
       </li>
     </ul>
+
+    <search 
+      :currentSearchTerm="postData.currentSearchTerm"
+      v-on:searchFieldChange="searchFieldChange"
+      v-on:searchRequest="searchRequest"
+    ></search>
     
     <ul class="eight29-categories">
       <template v-for="category in postData.categories">
@@ -52,11 +58,13 @@
 <script>
 import Selection from '../mixins/Selection';
 import ResetIcon from '../components/icons/ResetIcon.vue';
+import Search from '../components/Search';
 
 export default {
   name: 'Sidebar',
   components: {
-    ResetIcon
+    ResetIcon,
+    Search
   },
   props: {
     postData: Object,
@@ -66,6 +74,12 @@ export default {
   methods: {
     reset() {
       this.$emit('reset');
+    },
+    searchFieldChange(value) {
+      this.$emit('searchFieldChange', value);
+    },
+    searchRequest(value) {
+      this.$emit('searchRequest', value);
     }
   }
 }
