@@ -7,10 +7,7 @@
         :post="post"
         :currentCategoryIds="postData.currentCategoryIds"
         :settings="settings"
-        v-on:updateCurrentSelection="updateCurrentSelection"
-        v-on:update="updateSelected"
-        v-on:replaceCurrentSelection="replaceCurrentSelection"
-        v-on:replace="replaceSelected"
+        v-on:replaceSelected="replaceSelected"
         v-on:clearSearchTerm="clearSearchTerm"
       ></Post>
     </div>
@@ -71,17 +68,8 @@ export default {
     pageNext() {
       this.$emit('pageNext');
     },
-    updateCurrentSelection(object) {
-      this.$emit('updateCurrentSelection', object);
-    },
-    updateSelected(id) {
-      this.$emit('update', id);
-    },
-    replaceCurrentSelection(object) {
-      this.$emit('replaceCurrentSelection', object);
-    },
-    replaceSelected(id) {
-      this.$emit('replace', id);
+    replaceSelected(object) {
+      this.$emit('replaceSelected', object);
     },
     selectText(value) {
       this.$refs.pageInput.select();

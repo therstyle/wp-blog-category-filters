@@ -3,8 +3,7 @@
     <sidebar v-if="settings.displaySideBar" 
       :postData="postData"
       :settings="settings"
-      v-on:updateCurrentSelection="updateCurrent"
-      v-on:update="updateSelected"
+      v-on:updateSelected="updateSelected"
       v-on:searchFieldChange="searchFieldChange"
       v-on:searchRequest="loadPosts"
       v-on:reset="resetSelected"
@@ -14,10 +13,7 @@
       :postData="postData"
       :settings="settings"
       :style="postsCssVars"
-      v-on:updateCurrentSelection="updateCurrent"
-      v-on:update="updateSelected"
-      v-on:replaceCurrentSelection="updateCurrent"
-      v-on:replace="replaceSelected"
+      v-on:replaceSelected="replaceSelected"
       v-on:reset="resetSelected"
       v-on:pagePrev="pagePrev"
       v-on:pageNext="pageNext"
@@ -32,12 +28,6 @@ import Sidebar from './components/Sidebar';
 import Posts from './components/Posts';
 
 export default {
-  data() {
-    return {
-      pageParameter: `page=${this.postData.currentPage}&`,
-      perPageParamter: `per_page=${this.settings.postsPerPage}&`
-    }
-  },
   computed: {
     postsCssVars() {
       return {
@@ -86,7 +76,7 @@ export default {
         displayDate: wp.display_date === '1' ? true : false,
         displayCategories: wp.display_categories === '1' ? true : false,
         displayPostCounts: wp.display_post_counts === '1' ? true : false
-      },
+      }
     }
   },
   name: 'App',
@@ -101,7 +91,7 @@ export default {
       this.postData.categories = data;
     },
     loadPosts: async function() {
-      const requestURL = `${wp.home_url}/wp-json/wp/v2/posts?${this.categoryParamter}${this.searchParamter}${this.pageParameter}${this.perPageParamter}_embed`;
+      const requestURL = `${wp.home_url}/wp-json/wp/v2/posts?${this.categoryParamter}${this.searchParamter}page=${this.postData.currentPage}&per_page=${this.settings.postsPerPage}&_embed`;
 
       this.postData.loading = true;
       console.log(requestURL);
@@ -136,10 +126,10 @@ export default {
 
       this.loadPosts();
     },
-    updateSelected(id) {
-      if (this.postData.currentCategoryIds.includes(id)) {
+    updateSelected(object) {
+      if (this.postData.currentCategoryIds.includes(object.id)) {
         this.postData.categories.forEach(category => { //remove from array
-          if (category.id === id) {
+          if (category.id === object.id) {
             this.removeFromSelected(category.id);
 
             if (category.children && category.parent === 0) { //top level
@@ -157,7 +147,7 @@ export default {
                     childIds.push(child.id);
                   })
 
-                  if(childIds.includes(id) && category.parent === 0) {
+                  if(childIds.includes(object.id) && category.parent === 0) {
                     this.removeFromSelected(category.id);
                   }
                 }
@@ -168,7 +158,7 @@ export default {
       }
       else {
         this.postData.categories.forEach(category => { //add to array
-          if (category.id === id) {
+          if (category.id === object.id) {
             this.addToSelected(id);
 
             if (category.children && category.parent === 0) {
@@ -179,13 +169,15 @@ export default {
           }
         });
       }
+
+      this.updateCurrent(object);
     },
-    replaceSelected(id) {
+    replaceSelected(object) {
       const ids = [];
-      ids.push(id);
+      ids.push(object.id);
 
       this.postData.categories.forEach(category => {
-        if (category.id === id && category.children) {
+        if (category.id === object.id && category.children) {
           category.children.forEach(child => {
             ids.push(child.id);
           })
@@ -194,6 +186,7 @@ export default {
 
       this.postData.currentCategoryIds = ids;
       this.postData.currentPage = 1;
+      this.updateCurrent(object);
       this.loadPosts();
     },
     updateCurrent(object) {
