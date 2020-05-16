@@ -11,7 +11,7 @@ defined('ABSPATH') or die();
 **/
 
 class eight29_filters {
-  public static function get_fields() {
+  public function get_fields() {
     $fields = [
       [
         'id' => 'eight29_sidebar',
@@ -79,7 +79,7 @@ class eight29_filters {
         'label' => 'Featured Image Size',
         'section' => 'eight29_settings',
         'default' => 'true',
-        'options' => self::get_the_sizes()
+        'options' => $this->get_the_sizes()
       ],
       [
         'id' => 'eight29_author',
@@ -119,7 +119,7 @@ class eight29_filters {
     return $fields;
   }
 
-  public static function get_the_sizes() {
+  public function get_the_sizes() {
     $values = [];
     $sizes = get_intermediate_image_sizes();
 
@@ -130,17 +130,17 @@ class eight29_filters {
     return $values;
   }
 
-  public static function activation() {
+  public function activation() {
     do_action( 'eight29_filters_default_options' );
   }
 
-  public static function plugin_activated() {
-    foreach(self::get_fields() as $field) {
+  public function plugin_activated() {
+    foreach($this->get_fields() as $field) {
       add_option($field['id'], $field['default']);
     }
   }
 
-  public static function load_assets() { //Enqueue Scripts & Styles
+  public function load_assets() { //Enqueue Scripts & Styles
     $params = [
       'plugin_url' => plugin_dir_url(__FILE__),
       'home_url' => home_url(),
@@ -161,11 +161,11 @@ class eight29_filters {
     wp_localize_script('eight29_assets', 'wp', $params);
   }
 
-  public static function register_shortcode() {
+  public function register_shortcode() {
     return '<div class="eight29-filters"></div>';
   }
 
-  public static function get_category_list() {
+  public function get_category_list() {
     $data = [];
     $args = [
       'hide_empty' => false
@@ -188,7 +188,7 @@ class eight29_filters {
     return $data;
   }
 
-  public static function get_cat_children($taxonomy, $id) {
+  public function get_cat_children($taxonomy, $id) {
     $child_data = [];
 
     $children = get_terms([
@@ -215,14 +215,14 @@ class eight29_filters {
     return $child_data;
   }
 
-  public static function endpoint_categories() {
+  public function endpoint_categories() {
     register_rest_route( 'eight29/v1', 'categories',[
       'methods'  => 'GET',
       'callback' => ['eight29_filters', 'get_category_list']
     ]);
   }
 
-  public static function endpoint_post_date() { //Format date into something usable
+  public function endpoint_post_date() { //Format date into something usable
     register_rest_field(
       array('post'),
       'formatted_date',
@@ -236,7 +236,7 @@ class eight29_filters {
     );
   }
 
-  public static function endpoint_post_srcset() {
+  public function endpoint_post_srcset() {
     register_rest_field(
       array('post'),
       'featured_image_srcset',
@@ -251,7 +251,7 @@ class eight29_filters {
     );
   }
 
-  public static function register_admin_menu() {
+  public function register_admin_menu() {
     $page_title = '829 Blog & Category Filters Settings';
     $menu_title = '829 Blog & Category Filters';
     $capability = 'manage_options';
@@ -263,7 +263,7 @@ class eight29_filters {
     add_menu_page($page_title, $menu_title, $capability, $slug, $callback, $icon, $position);
   }
 
-  public static function options_page_content() {
+  public function options_page_content() {
     echo '
     <div class="wrap">
       <h2>829 Blog & Category Filter Settings</h2>
@@ -277,22 +277,22 @@ class eight29_filters {
     ';
   }
 
-  public static function register_options_page_fields() {
+  public function register_options_page_fields() {
     //Sections
     add_settings_section('eight29_post_settings_section', 'Post Style Settings', ['eight29_filters', 'register_options_section'], 'eight29_settings');
 
     //Register & Add Settings
-    foreach (self::get_fields() as $field) {
+    foreach ($this->get_fields() as $field) {
       register_setting($field['section'], $field['id']);
       add_settings_field($field['id'], $field['label'], ['eight29_filters', 'display_options_fields'], $field['section'], 'eight29_post_settings_section', $field);
     }
   }
 
-  public static function register_options_section() {
+  public function register_options_section() {
     // add front end description html for section here
   }
 
-  public static function display_options_fields($field) {
+  public function display_options_fields($field) {
     $value = get_option($field['id']);
 
     if ($field['type'] === 'select') {
@@ -309,18 +309,19 @@ class eight29_filters {
     }
   }
 
-  public static function init() {
-    register_activation_hook( __FILE__, ['eight29_filters', 'activation'] );
-    add_action( 'eight29_filters_default_options', ['eight29_filters', 'plugin_activated']);
-    add_action('wp_enqueue_scripts', ['eight29_filters', 'load_assets']);
-    add_shortcode('eight29_filters', ['eight29_filters', 'register_shortcode']);
-    add_action('rest_api_init', ['eight29_filters', 'endpoint_categories']);
-    add_action('rest_api_init', ['eight29_filters', 'endpoint_post_date']);
-    add_action('rest_api_init', ['eight29_filters', 'endpoint_post_srcset']);
-    add_action( 'admin_menu', ['eight29_filters', 'register_admin_menu']);
-    add_action( 'admin_init', ['eight29_filters', 'register_options_page_fields']);
+  public function init() {
+    register_activation_hook( __FILE__, [$this, 'activation'] );
+    add_action( 'eight29_filters_default_options', [$this, 'plugin_activated']);
+    add_action('wp_enqueue_scripts', [$this, 'load_assets']);
+    add_shortcode('eight29_filters', [$this, 'register_shortcode']);
+    add_action('rest_api_init', [$this, 'endpoint_categories']);
+    add_action('rest_api_init', [$this, 'endpoint_post_date']);
+    add_action('rest_api_init', [$this, 'endpoint_post_srcset']);
+    add_action( 'admin_menu', [$this, 'register_admin_menu']);
+    add_action( 'admin_init', [$this, 'register_options_page_fields']);
   }
 }
 
-eight29_filters::init();
+$eight29_filters = new eight29_filters();
+$eight29_filters->init();
 ?>

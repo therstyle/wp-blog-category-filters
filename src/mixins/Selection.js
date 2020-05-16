@@ -1,12 +1,10 @@
 export default {
   methods: {
-    updateCurrentSelection(object) {
-      this.$emit('updateCurrentSelection', object);
-      this.$emit('update', object.id);
+    updateSelected(object) {
+      this.$emit('updateSelected', object);
     },
-    replaceCurrentSelection(object) {
-      this.$emit('replaceCurrentSelection', object);
-      this.$emit('replace', object.id);
+    replaceSelected(object) {
+      this.$emit('replaceSelected', object);
     }
   }
 }

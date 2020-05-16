@@ -3,8 +3,7 @@
     <sidebar v-if="settings.displaySideBar" 
       :postData="postData"
       :settings="settings"
-      v-on:updateCurrentSelection="updateCurrent"
-      v-on:update="updateSelected"
+      v-on:updateSelected="updateSelected"
       v-on:searchFieldChange="searchFieldChange"
       v-on:searchRequest="loadPosts"
       v-on:reset="resetSelected"
@@ -14,10 +13,7 @@
       :postData="postData"
       :settings="settings"
       :style="postsCssVars"
-      v-on:updateCurrentSelection="updateCurrent"
-      v-on:update="updateSelected"
-      v-on:replaceCurrentSelection="updateCurrent"
-      v-on:replace="replaceSelected"
+      v-on:replaceSelected="replaceSelected"
       v-on:reset="resetSelected"
       v-on:pagePrev="pagePrev"
       v-on:pageNext="pageNext"
@@ -32,12 +28,6 @@ import Sidebar from './components/Sidebar';
 import Posts from './components/Posts';
 
 export default {
-  data() {
-    return {
-      pageParameter: `page=${this.postData.currentPage}&`,
-      perPageParamter: `per_page=${this.settings.postsPerPage}&`
-    }
-  },
   computed: {
     postsCssVars() {
       return {
@@ -64,14 +54,14 @@ export default {
   data() {
     return {
       postData: {
-        categories: [],
         posts: [],
+        categories: [],
+        currentCategoryIds: [],
         currentCategory: 'uncategorized',
         currentSearchTerm: '',
         currentId: 1,
         currentPage: 1,
         maxPages: 1,
-        currentCategoryIds: [],
         results: 0,
         loading: false,
       },
@@ -86,7 +76,7 @@ export default {
         displayDate: wp.display_date === '1' ? true : false,
         displayCategories: wp.display_categories === '1' ? true : false,
         displayPostCounts: wp.display_post_counts === '1' ? true : false
-      },
+      }
     }
   },
   name: 'App',
@@ -101,7 +91,7 @@ export default {
       this.postData.categories = data;
     },
     loadPosts: async function() {
-      const requestURL = `${wp.home_url}/wp-json/wp/v2/posts?${this.categoryParamter}${this.searchParamter}${this.pageParameter}${this.perPageParamter}_embed`;
+      const requestURL = `${wp.home_url}/wp-json/wp/v2/posts?${this.categoryParamter}${this.searchParamter}page=${this.postData.currentPage}&per_page=${this.settings.postsPerPage}&_embed`;
 
       this.postData.loading = true;
       console.log(requestURL);
@@ -119,73 +109,91 @@ export default {
       this.postData.currentPage = 1;
       this.clearSearchTerm();
     },
-    addToSelected(id) {
-      if (!this.postData.currentCategoryIds.includes(id)) {
-        this.postData.currentCategoryIds = [...this.postData.currentCategoryIds, id];
-        this.postData.currentPage = 1;
-      }
-  
-      this.loadPosts();
-    },
-    removeFromSelected(id) {
-      let selectedCategories = [...this.postData.currentCategoryIds];
-      selectedCategories = selectedCategories.filter(categoryId => categoryId !== id);
-
-      this.postData.currentCategoryIds = selectedCategories;
-      this.postData.currentPage = 1;
-
-      this.loadPosts();
-    },
-    updateSelected(id) {
-      if (this.postData.currentCategoryIds.includes(id)) {
-        this.postData.categories.forEach(category => { //remove from array
-          if (category.id === id) {
-            this.removeFromSelected(category.id);
-
-            if (category.children && category.parent === 0) { //top level
-              category.children.forEach(child => {
-                this.removeFromSelected(child.id)
-              });
-            }
-
-            if (category.parent !== 0) {
-              const childIds = [];
-              
-              this.postData.categories.forEach(category => { //search for children remove top level parent from selected
-                if (category.children) {
-                  category.children.forEach(child => {
-                    childIds.push(child.id);
-                  })
-
-                  if(childIds.includes(id) && category.parent === 0) {
-                    this.removeFromSelected(category.id);
-                  }
-                }
-              });
-            }
+    addToSelected(ids) {
+      if (Array.isArray(ids)) {
+        ids.forEach(id => {
+          if (!this.postData.currentCategoryIds.includes(id)) {
+            this.postData.currentCategoryIds = [...this.postData.currentCategoryIds, id];
+            this.postData.currentPage = 1;
           }
         });
+    
+        this.loadPosts();
+      }
+    },
+    removeFromSelected(ids) {
+      if (Array.isArray(ids)) {
+        const categories = [...this.postData.categories];
+        let selectedCategories = [...this.postData.currentCategoryIds];
+
+        ids.forEach(id => {
+          selectedCategories = selectedCategories.filter(categoryId => categoryId !== id);
+        });
+
+        this.postData.currentCategoryIds = selectedCategories;
+        this.postData.currentPage = 1;
+
+        this.loadPosts();
+      }
+    },
+    isSelected(id) {
+      return this.postData.currentCategoryIds.includes(id);
+    },
+    getParent(id) {
+      const categories = [...this.postData.categories];
+      let result = 0;
+
+      categories.forEach(category => {
+        let children = this.hasChildren(category.id);
+        if (children && children.includes(id)) {
+          result = category.id;
+        }
+      });
+
+      return result;
+    },
+    hasChildren(id) {
+      const categories = [...this.postData.categories];
+      const ids = [];
+
+      categories.forEach(category => {
+        if (category.children && category.parent === 0 && category.id === id) {
+          category.children.forEach(child => {
+            ids.push(child.id);
+          });
+        }
+      });
+
+      const result = ids.length === 0 ? false : ids;
+      return result;
+    },
+    updateSelected(object) {
+      const selected = this.isSelected(object.id);
+      const children = this.hasChildren(object.id);
+      const parent = this.getParent(object.id);
+      const parentSelected = this.isSelected(parent);
+
+      if (selected) {
+        this.removeFromSelected([object.id]);
+        this.removeFromSelected(children);
+
+        if (parentSelected) {
+          this.removeFromSelected([parent]);
+        }
       }
       else {
-        this.postData.categories.forEach(category => { //add to array
-          if (category.id === id) {
-            this.addToSelected(id);
-
-            if (category.children && category.parent === 0) {
-              category.children.forEach(child => {
-                this.addToSelected(child.id)
-              });
-            }
-          }
-        });
+        this.addToSelected([object.id]);
+        this.addToSelected(children);
       }
+
+      this.updateCurrent(object);
     },
-    replaceSelected(id) {
+    replaceSelected(object) {
       const ids = [];
-      ids.push(id);
+      ids.push(object.id);
 
       this.postData.categories.forEach(category => {
-        if (category.id === id && category.children) {
+        if (category.id === object.id && category.children) {
           category.children.forEach(child => {
             ids.push(child.id);
           })
@@ -194,6 +202,7 @@ export default {
 
       this.postData.currentCategoryIds = ids;
       this.postData.currentPage = 1;
+      this.updateCurrent(object);
       this.loadPosts();
     },
     updateCurrent(object) {
