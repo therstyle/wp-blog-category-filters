@@ -109,65 +109,60 @@ export default {
       this.postData.currentPage = 1;
       this.clearSearchTerm();
     },
-    addToSelected(id) {
-      if (!this.postData.currentCategoryIds.includes(id)) {
-        this.postData.currentCategoryIds = [...this.postData.currentCategoryIds, id];
-        this.postData.currentPage = 1;
-      }
+    addToSelected(ids) {
+      ids.forEach(id => {
+        if (!this.postData.currentCategoryIds.includes(id)) {
+          this.postData.currentCategoryIds = [...this.postData.currentCategoryIds, id];
+          this.postData.currentPage = 1;
+        }
+      });
   
       this.loadPosts();
     },
-    removeFromSelected(id) {
+    removeFromSelected(ids) {
       let selectedCategories = [...this.postData.currentCategoryIds];
-      selectedCategories = selectedCategories.filter(categoryId => categoryId !== id);
+
+      ids.forEach(id => {
+        selectedCategories = selectedCategories.filter(categoryId => categoryId !== id);
+      });
 
       this.postData.currentCategoryIds = selectedCategories;
       this.postData.currentPage = 1;
 
       this.loadPosts();
     },
+    hasChildren(id) {
+      const categories = [...this.postData.categories];
+      const ids = [];
+
+      categories.forEach(category => {
+        if (category.children && category.parent === 0 && category.id === id) {
+          category.children.forEach(child => {
+            ids.push(child.id);
+          });
+        }
+      });
+
+      const result = ids.length === 0 ? false : ids;
+      return result;
+    },
     updateSelected(object) {
-      if (this.postData.currentCategoryIds.includes(object.id)) {
-        this.postData.categories.forEach(category => { //remove from array
-          if (category.id === object.id) {
-            this.removeFromSelected(category.id);
+      const selected = this.postData.currentCategoryIds.includes(object.id);
+      const children = this.hasChildren(object.id);
 
-            if (category.children && category.parent === 0) { //top level
-              category.children.forEach(child => {
-                this.removeFromSelected(child.id)
-              });
-            }
-
-            if (category.parent !== 0) {
-              const childIds = [];
-              
-              this.postData.categories.forEach(category => { //search for children remove top level parent from selected
-                if (category.children) {
-                  category.children.forEach(child => {
-                    childIds.push(child.id);
-                  })
-
-                  if(childIds.includes(object.id) && category.parent === 0) {
-                    this.removeFromSelected(category.id);
-                  }
-                }
-              });
-            }
-          }
-        });
+      if (selected) {
+        this.removeFromSelected([object.id]);
+        
+        if(children) {
+          this.removeFromSelected(children);
+        }
       }
       else {
-        this.postData.categories.forEach(category => { //add to array
-          if (category.id === object.id) {
-            this.addToSelected(object.id);
-
-            if (category.children && category.parent === 0) {
-              category.children.forEach(child => {
-                this.addToSelected(child.id)
-              });
-            }
-          }
-        });
+        this.addToSelected([object.id]);
+        
+        if(children) {
+          this.addToSelected(children);
+        }
       }
 
       this.updateCurrent(object);
