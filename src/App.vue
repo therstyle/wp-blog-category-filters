@@ -32,6 +32,12 @@ import Sidebar from './components/Sidebar';
 import Posts from './components/Posts';
 
 export default {
+  data() {
+    return {
+      pageParameter: `page=${this.postData.currentPage}&`,
+      perPageParamter: `per_page=${this.settings.postsPerPage}&`
+    }
+  },
   computed: {
     postsCssVars() {
       return {
@@ -95,7 +101,7 @@ export default {
       this.postData.categories = data;
     },
     loadPosts: async function() {
-      const requestURL = `${wp.home_url}/wp-json/wp/v2/posts?${this.categoryParamter}${this.searchParamter}page=${this.postData.currentPage}&per_page=${this.settings.postsPerPage}&_embed`;
+      const requestURL = `${wp.home_url}/wp-json/wp/v2/posts?${this.categoryParamter}${this.searchParamter}${this.pageParameter}${this.perPageParamter}_embed`;
 
       this.postData.loading = true;
       console.log(requestURL);

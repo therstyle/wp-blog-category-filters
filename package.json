@@ -1,6 +1,6 @@
 {
-  "name": "eight29-filters-vue",
-  "version": "1.0.0",
+  "name": "eight29-filters",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "dependencies": {
