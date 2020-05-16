@@ -5,6 +5,8 @@
       :settings="settings"
       v-on:updateCurrentSelection="updateCurrent"
       v-on:update="updateSelected"
+      v-on:searchFieldChange="searchFieldChange"
+      v-on:searchRequest="loadPosts"
       v-on:reset="resetSelected"
     ></sidebar>
 
@@ -20,6 +22,7 @@
       v-on:pagePrev="pagePrev"
       v-on:pageNext="pageNext"
       v-on:pageUpdate="pageUpdate"
+      v-on:clearSearchTerm="clearSearchTerm"
     ></posts>
   </div>
 </template>
@@ -42,6 +45,14 @@ export default {
       else {
         return '';
       }
+    },
+    searchParamter() {
+      if(this.postData.currentSearchTerm.length !== 0) {
+        return `search=${this.postData.currentSearchTerm}&`;
+      }
+      else {
+        return '';
+      }
     }
   },
   data() {
@@ -50,6 +61,7 @@ export default {
         categories: [],
         posts: [],
         currentCategory: 'uncategorized',
+        currentSearchTerm: '',
         currentId: 1,
         currentPage: 1,
         maxPages: 1,
@@ -83,11 +95,12 @@ export default {
       this.postData.categories = data;
     },
     loadPosts: async function() {
-      this.postData.loading = true;
-  
-      console.log(`${wp.home_url}/wp-json/wp/v2/posts?${this.categoryParamter}page=${this.postData.currentPage}&per_page=${this.settings.postsPerPage}&_embed`);
+      const requestURL = `${wp.home_url}/wp-json/wp/v2/posts?${this.categoryParamter}${this.searchParamter}page=${this.postData.currentPage}&per_page=${this.settings.postsPerPage}&_embed`;
 
-      const response = await fetch(`${wp.home_url}/wp-json/wp/v2/posts?${this.categoryParamter}page=${this.postData.currentPage}&per_page=${this.settings.postsPerPage}&_embed`);
+      this.postData.loading = true;
+      console.log(requestURL);
+
+      const response = await fetch(requestURL);
       const data = await response.json();
       this.postData.posts = data;
       this.postData.maxPages = parseInt(response.headers.get('X-WP-TotalPages'));
@@ -98,21 +111,17 @@ export default {
     resetSelected() {
       this.postData.currentCategoryIds = [];
       this.postData.currentPage = 1;
-      this.loadPosts();
+      this.clearSearchTerm();
     },
     addToSelected(id) {
-      console.log('addToSelected');
-
       if (!this.postData.currentCategoryIds.includes(id)) {
         this.postData.currentCategoryIds = [...this.postData.currentCategoryIds, id];
         this.postData.currentPage = 1;
       }
   
-      console.log(this.postData.currentCategoryIds);
       this.loadPosts();
     },
     removeFromSelected(id) {
-      console.log('removeFromSelected');
       let selectedCategories = [...this.postData.currentCategoryIds];
       selectedCategories = selectedCategories.filter(categoryId => categoryId !== id);
 
@@ -122,11 +131,8 @@ export default {
       this.loadPosts();
     },
     updateSelected(id) {
-      console.log('replaceSelected');
-
       if (this.postData.currentCategoryIds.includes(id)) {
-        console.log('remove from array');
-        this.postData.categories.forEach(category => {
+        this.postData.categories.forEach(category => { //remove from array
           if (category.id === id) {
             this.removeFromSelected(category.id);
 
@@ -155,8 +161,7 @@ export default {
         });
       }
       else {
-        console.log('add to array');
-        this.postData.categories.forEach(category => {
+        this.postData.categories.forEach(category => { //add to array
           if (category.id === id) {
             this.addToSelected(id);
 
@@ -170,7 +175,6 @@ export default {
       }
     },
     replaceSelected(id) {
-      console.log('replaceSelected');
       const ids = [];
       ids.push(id);
 
@@ -189,9 +193,6 @@ export default {
     updateCurrent(object) {
       this.postData.currentCategory = object.category;
       this.postData.currentId = object.id;
-
-      console.log('current IDs')
-      console.log(this.postData.currentCategoryIds);
     },
     setLocalStorage() {
       const selected = JSON.stringify(this.postData.currentCategoryIds);
@@ -237,6 +238,13 @@ export default {
         this.loadPosts();
         this.scrollUp();
       }
+    },
+    clearSearchTerm() {
+      this.searchFieldChange('');
+      this.loadPosts();
+    },
+    searchFieldChange(value) {
+      this.postData.currentSearchTerm = value;
     },
     scrollUp() {
       window.scroll({
