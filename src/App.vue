@@ -159,7 +159,7 @@ export default {
       else {
         this.postData.categories.forEach(category => { //add to array
           if (category.id === object.id) {
-            this.addToSelected(id);
+            this.addToSelected(object.id);
 
             if (category.children && category.parent === 0) {
               category.children.forEach(child => {
