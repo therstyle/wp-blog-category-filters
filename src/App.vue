@@ -54,14 +54,14 @@ export default {
   data() {
     return {
       postData: {
-        categories: [],
         posts: [],
+        categories: [],
+        currentCategoryIds: [],
         currentCategory: 'uncategorized',
         currentSearchTerm: '',
         currentId: 1,
         currentPage: 1,
         maxPages: 1,
-        currentCategoryIds: [],
         results: 0,
         loading: false,
       },
