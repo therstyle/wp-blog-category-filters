@@ -110,26 +110,47 @@ export default {
       this.clearSearchTerm();
     },
     addToSelected(ids) {
-      ids.forEach(id => {
-        if (!this.postData.currentCategoryIds.includes(id)) {
-          this.postData.currentCategoryIds = [...this.postData.currentCategoryIds, id];
-          this.postData.currentPage = 1;
-        }
-      });
-  
-      this.loadPosts();
+      if (Array.isArray(ids)) {
+        ids.forEach(id => {
+          if (!this.postData.currentCategoryIds.includes(id)) {
+            this.postData.currentCategoryIds = [...this.postData.currentCategoryIds, id];
+            this.postData.currentPage = 1;
+          }
+        });
+    
+        this.loadPosts();
+      }
     },
     removeFromSelected(ids) {
-      let selectedCategories = [...this.postData.currentCategoryIds];
+      if (Array.isArray(ids)) {
+        const categories = [...this.postData.categories];
+        let selectedCategories = [...this.postData.currentCategoryIds];
 
-      ids.forEach(id => {
-        selectedCategories = selectedCategories.filter(categoryId => categoryId !== id);
+        ids.forEach(id => {
+          selectedCategories = selectedCategories.filter(categoryId => categoryId !== id);
+        });
+
+        this.postData.currentCategoryIds = selectedCategories;
+        this.postData.currentPage = 1;
+
+        this.loadPosts();
+      }
+    },
+    isSelected(id) {
+      return this.postData.currentCategoryIds.includes(id);
+    },
+    getParent(id) {
+      const categories = [...this.postData.categories];
+      let result = 0;
+
+      categories.forEach(category => {
+        let children = this.hasChildren(category.id);
+        if (children && children.includes(id)) {
+          result = category.id;
+        }
       });
 
-      this.postData.currentCategoryIds = selectedCategories;
-      this.postData.currentPage = 1;
-
-      this.loadPosts();
+      return result;
     },
     hasChildren(id) {
       const categories = [...this.postData.categories];
@@ -147,22 +168,22 @@ export default {
       return result;
     },
     updateSelected(object) {
-      const selected = this.postData.currentCategoryIds.includes(object.id);
+      const selected = this.isSelected(object.id);
       const children = this.hasChildren(object.id);
+      const parent = this.getParent(object.id);
+      const parentSelected = this.isSelected(parent);
 
       if (selected) {
         this.removeFromSelected([object.id]);
-        
-        if(children) {
-          this.removeFromSelected(children);
+        this.removeFromSelected(children);
+
+        if (parentSelected) {
+          this.removeFromSelected([parent]);
         }
       }
       else {
         this.addToSelected([object.id]);
-        
-        if(children) {
-          this.addToSelected(children);
-        }
+        this.addToSelected(children);
       }
 
       this.updateCurrent(object);
