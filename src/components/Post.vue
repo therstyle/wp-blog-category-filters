@@ -19,7 +19,7 @@
           v-for="category in post._embedded['wp:term'][0]" 
           :key="category.id"
           :data-attribute-selected="currentCategoryIds.includes(category.id)"
-          v-on:click.prevent="replaceSelected({ category: category.slug, id: category.id, selected: currentCategoryIds.includes(category.id) }); clearSearchTerm();"
+          v-on:click.prevent="replaceSelected(category); clearSearchTerm();"
         >{{ category.name }}</a>
       </div>
 

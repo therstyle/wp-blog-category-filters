@@ -27,7 +27,7 @@
               :value="category.slug" 
               :id="category.slug" 
               :checked="postData.currentCategoryIds.includes(category.id)"
-              v-on:change="updateSelected({category: category.slug, id: category.id, children: category.children, selected: postData.currentCategoryIds.includes(category.id)})"
+              v-on:change="updateSelected(category)"
             >
             <label :for="category.slug">{{ category.name }} 
               <span v-if="settings.displayPostCounts" class="eight29-category-count">({{ category.count }})</span>
