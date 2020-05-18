@@ -5,7 +5,7 @@ defined('ABSPATH') or die();
 * Plugin Name: 829 Blog & Category Filters
 * Plugin URI: https://829llc.com
 * Description: Display blog index with category filtering with shortcode [eight29_filters]
-* Version: 1.0
+* Version: 1.0.3
 * Author: Chris Roberts
 * Author URI: https://829llc.com
 **/
@@ -324,4 +324,24 @@ class eight29_filters {
 
 $eight29_filters = new eight29_filters();
 $eight29_filters->init();
+
+require 'plugin-update-checker/plugin-update-checker.php';
+$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+	'https://bitbucket.org/829studios/829-blog-category-filter-plugin',
+	__FILE__,
+	'eight29-filters'
+);
+
+//Optional: If you're using a private repository, create an OAuth consumer
+//and set the authentication credentials like this:
+//Note: For now you need to check "This is a private consumer" when
+//creating the consumer to work around #134:
+// https://github.com/YahnisElsts/plugin-update-checker/issues/134
+$myUpdateChecker->setAuthentication(array(
+	'consumer_key' => 'hHUwg3tZyAwhW9hKyj',
+	'consumer_secret' => 'FYKPCXLtwLcsytrvAtM4PKQfRK3sF6b2',
+));
+
+//Optional: Set the branch that contains the stable release.
+$myUpdateChecker->setBranch('master');
 ?>
