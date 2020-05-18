@@ -309,6 +309,28 @@ class eight29_filters {
     }
   }
 
+  private function updater() {
+    require 'plugin-update-checker/plugin-update-checker.php';
+    $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+      'https://bitbucket.org/829studios/829-blog-category-filter-plugin',
+      __FILE__,
+      'eight29-filters'
+    );
+
+    //Optional: If you're using a private repository, create an OAuth consumer
+    //and set the authentication credentials like this:
+    //Note: For now you need to check "This is a private consumer" when
+    //creating the consumer to work around #134:
+    // https://github.com/YahnisElsts/plugin-update-checker/issues/134
+    $myUpdateChecker->setAuthentication(array(
+      'consumer_key' => 'hHUwg3tZyAwhW9hKyj',
+      'consumer_secret' => 'FYKPCXLtwLcsytrvAtM4PKQfRK3sF6b2',
+    ));
+
+    //Optional: Set the branch that contains the stable release.
+    $myUpdateChecker->setBranch('master');
+  }
+
   public function init() {
     register_activation_hook( __FILE__, [$this, 'activation'] );
     add_action( 'eight29_filters_default_options', [$this, 'plugin_activated']);
@@ -319,29 +341,10 @@ class eight29_filters {
     add_action('rest_api_init', [$this, 'endpoint_post_srcset']);
     add_action( 'admin_menu', [$this, 'register_admin_menu']);
     add_action( 'admin_init', [$this, 'register_options_page_fields']);
+    $this->updater();
   }
 }
 
 $eight29_filters = new eight29_filters();
 $eight29_filters->init();
-
-require 'plugin-update-checker/plugin-update-checker.php';
-$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-	'https://bitbucket.org/829studios/829-blog-category-filter-plugin',
-	__FILE__,
-	'eight29-filters'
-);
-
-//Optional: If you're using a private repository, create an OAuth consumer
-//and set the authentication credentials like this:
-//Note: For now you need to check "This is a private consumer" when
-//creating the consumer to work around #134:
-// https://github.com/YahnisElsts/plugin-update-checker/issues/134
-$myUpdateChecker->setAuthentication(array(
-	'consumer_key' => 'hHUwg3tZyAwhW9hKyj',
-	'consumer_secret' => 'FYKPCXLtwLcsytrvAtM4PKQfRK3sF6b2',
-));
-
-//Optional: Set the branch that contains the stable release.
-$myUpdateChecker->setBranch('master');
 ?>
