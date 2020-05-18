@@ -1,5 +1,5 @@
 <template>
-  <div class="eight29-app" :class="{'no-sidebar' : !settings.displaySideBar}" ref="root">
+  <div class="eight29-app" :class="{'sidebar-enabled' : settings.displaySideBar}" ref="root">
     <sidebar v-if="settings.displaySideBar" 
       :postData="postData"
       :settings="settings"
