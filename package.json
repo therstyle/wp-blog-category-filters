@@ -29,7 +29,7 @@
   "scripts": {
     "start": "parcel watch src/main.js src/assets/css/style.scss",
     "build": "parcel build src/main.js src/assets/css/style.scss",
-    "zip": "npm run build && bestzip eight29-filters.zip index.php dist",
+    "zip": "npm run build && bestzip eight29-filters.zip index.php dist plugin-update-checker",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
