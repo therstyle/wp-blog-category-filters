@@ -1,4 +1,17 @@
 :root {
+  //Size / Spacing
   --posts-per-row: 1;
   --space: 16px;
+  --space-quarter: calc(var(--space) / 4);
+  --space-half: calc(var(--space) / 2);
+  --space-2: calc(var(--space) * 2);
+  --space-3: calc(var(--space) * 3);
+  --space-4: calc(var(--space) * 4);
+  --space-5: calc(var(--space) * 5);
+  --space-6: calc(var(--space) * 6);
+  --space-7: calc(var(--space) * 7);
+  --space-8: calc(var(--space) * 8);
+
+  //Colors
+  --border-color: hsl(0, 0%, 75%);
 }
